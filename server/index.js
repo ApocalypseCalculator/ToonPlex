@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require('fs');
+const fileUpload = require('express-fileupload');
 const path = require('path');
 require('dotenv').config();
 
@@ -8,6 +9,15 @@ const app = express();
 app.enable('trust proxy');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ strict: true }));
+app.use(fileUpload({
+    useTempFiles : true,
+    tempFileDir : './tmp/',
+    limits: {
+        fieldSize: 50 * 1024 * 1024 // surely no one will upload a file larger than 50MB
+    },
+    safeFileNames: true,
+    abortOnLimit: true
+}));
 
 app.use((req, res, next) => {
     if(req.header('authorization') === process.env.MASTERPWD) {
