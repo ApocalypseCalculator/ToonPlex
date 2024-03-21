@@ -35,13 +35,12 @@ model Toon {
     id        Int       @id @default(autoincrement())
     slug      String    @unique
     title     String
-    alttitle  String
+    alttitle  String?
     authors   Author[]
     artists   Artist[]
     genres    Genre[]
     tags      Tag[]
     status    Status    @default(ONGOING)
-    scraped   Boolean   @default(false)
     summary   String
     published Boolean   @default(false)
     chapters  Chapter[]
