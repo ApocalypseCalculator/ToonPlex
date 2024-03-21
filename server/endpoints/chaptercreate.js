@@ -8,7 +8,7 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    if (req.body.slug && req.body.title) {
+    if (req.body.name && req.body.order) {
         prisma.chapter.create({
             data: {
                 name: req.body.name,
@@ -21,14 +21,16 @@ module.exports.execute = function (req, res) {
                             order: i + 1,
                             image: {
                                 create: {
-                                    path: `${req.body.toonid}/${req.body.slug}/${i + 1}.${req.body.ext}`
+                                    path: `${req.body.toonid}/${req.body.order}/${i + 1}.${req.body.ext}`
                                 }
                             }
                         }
                     })
                 }
             }
-        })
+        }).then(() => {
+            res.status(200).json({ status: 201, message: `Chapter created` });
+        });
     }
     else {
         res.status(400).json({ error: `Invalid form` });

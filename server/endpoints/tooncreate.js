@@ -66,6 +66,20 @@ module.exports.execute = function (req, res) {
                     })
                 }
             }
+        }).then((toon) => {
+            prisma.toon.update({
+                where: {
+                    id: toon.id
+                },
+                data: {
+                    cover: {
+                        create: {
+                            path: `${toon.id}/cover.${req.body.ext}`
+                        }
+                    }
+                }
+            });
+            res.status(200).json({ status: 201, message: `Toon created` });
         })
     }
     else {
