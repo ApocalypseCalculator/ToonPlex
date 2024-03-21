@@ -49,10 +49,10 @@ model Toon {
 }
 
 model Chapter {
-    id     Int    @id @default(autoincrement())
+    id     Int      @id @default(autoincrement())
     name   String
     date   DateTime
-    toon   Toon   @relation(fields: [toonid], references: [id])
+    toon   Toon     @relation(fields: [toonid], references: [id])
     toonid Int
     order  Int // chapter number
     pages  Page[]
@@ -68,11 +68,12 @@ model Page {
 }
 
 model Image {
-    id   Int    @id @default(autoincrement())
-    path String @unique
-    status UploadStatus @default(PENDING)
-    toon Toon[]
-    page Page[]
+    id        Int          @id @default(autoincrement())
+    transport String       @unique @default(cuid())
+    path      String
+    status    UploadStatus @default(PENDING)
+    toon      Toon[]
+    page      Page[]
 }
 
 enum Status {
