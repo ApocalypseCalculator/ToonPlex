@@ -1,6 +1,6 @@
 datasource db {
-    provider = "sqlite"
-    url      = "file:./data.db"
+    provider = "postgresql"
+    url      = env("DB_URL")
 }
 
 generator client {
@@ -40,7 +40,7 @@ model Toon {
     artists   Artist[]
     genres    Genre[]
     tags      Tag[]
-    status    Int       @default(0) // Ongoing - 0, Completed - 1, Hiatus - 2, Discontinued - 3
+    status    Status    @default(ONGOING)
     scraped   Boolean   @default(false)
     summary   String
     published Boolean   @default(false)
@@ -52,7 +52,7 @@ model Toon {
 model Chapter {
     id     Int    @id @default(autoincrement())
     name   String
-    // date   Int // dates in YYYYMMDD format
+    date   DateTime
     toon   Toon   @relation(fields: [toonid], references: [id])
     toonid Int
     order  Int // chapter number
@@ -71,6 +71,21 @@ model Page {
 model Image {
     id   Int    @id @default(autoincrement())
     path String @unique
+    status UploadStatus @default(PENDING)
     toon Toon[]
     page Page[]
+}
+
+enum Status {
+    ONGOING
+    COMPLETED
+    HIATUS
+    DISCONTINUED
+}
+
+enum UploadStatus {
+    PENDING
+    UPLOADED
+    FAILED
+    DELETED
 }
