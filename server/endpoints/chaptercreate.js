@@ -28,8 +28,8 @@ module.exports.execute = function (req, res) {
                     })
                 }
             }
-        }).then(() => {
-            res.status(200).json({ status: 201, message: `Chapter created` });
+        }).then((chapter) => {
+            res.status(200).json({ status: 201, message: `Chapter created`, chapter: chapter.id });
         });
     }
     else {
