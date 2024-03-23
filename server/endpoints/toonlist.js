@@ -16,7 +16,16 @@ module.exports.execute = function (req, res) {
         where: {
             ...(!req.auth && {published: true})
         },
-        include: {
+        select: {
+            id: true,
+            slug: true,
+            title: true,
+            authors: true,
+            artists: true,
+            genres: true,
+            tags: true,
+            status: true,
+            published: true,
             cover: {
                 where: {
                     status: UploadStatus.UPLOADED
