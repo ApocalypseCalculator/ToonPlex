@@ -79,7 +79,7 @@ module.exports.execute = function (req, res) {
                     }
                 }
             });
-            res.status(200).json({ status: 201, message: `Toon created` });
+            res.status(200).json({ status: 201, message: `Toon created`, toon: toon.id});
         })
     }
     else {
