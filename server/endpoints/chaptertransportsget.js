@@ -1,17 +1,17 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-module.exports.name = "/api/chapter/transports/get";
-module.exports.method = "POST";
+module.exports.name = "/api/chapter/transports/get/:chapterid";
+module.exports.method = "GET";
 module.exports.verify = function (req, res) {
     return req.auth;
 }
 
 module.exports.execute = function (req, res) {
-    if (req.body.chapterid) {
+    if (req.params.chapterid) {
         prisma.chapter.findUnique({
             where: {
-                id: req.body.chapterid
+                id: req.params.chapterid
             },
             select: {
                 pages: {
@@ -25,8 +25,8 @@ module.exports.execute = function (req, res) {
                     }
                 }
             }
-        }).then((page) => {
-            res.status(200).json({ status: 200, transports: page.pages });
+        }).then((chapter) => {
+            res.status(200).json({ status: 200, transports: chapter.pages });
         })
     }
     else {
