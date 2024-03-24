@@ -17,8 +17,8 @@ export const _App = () => {
             <div className="page-content">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/toon/:toonid" element={<Toon />} />
-                    <Route path="/reader/:toonid/:chapter" element={<Toon />} />
+                    <Route path="/toon/:toonslug" element={<Toon />} />
+                    <Route path="/reader/:toonslug/:chapter" element={<Toon />} />
                     <Route path="/directory" element={<Directory />} />
                 </Routes>
             </div>
