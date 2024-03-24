@@ -1,17 +1,17 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-module.exports.name = "/api/toon/get/:toonid";
+module.exports.name = "/api/toon/get/:toonslug";
 module.exports.method = "GET";
 module.exports.verify = function (req, res) {
     return true;
 }
 
 module.exports.execute = function (req, res) {
-    if (req.params.toonid) {
+    if (req.params.toonslug) {
         prisma.toon.findUnique({
             where: {
-                id: req.params.toonid,
+                slug: req.params.toonslug,
                 ...(!req.auth && {published: true}) // if not authorized, only published toons are viewable
             },
             include: {
