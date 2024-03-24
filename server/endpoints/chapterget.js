@@ -22,7 +22,15 @@ module.exports.execute = function (req, res) {
                     }}) // if not authorized, only published toons are viewable
             },
             include: {
-                toon: true,
+                toon: {
+                    include: {
+                        _count: {
+                            select: {
+                                chapters: true
+                            }
+                        }
+                    }
+                },
                 pages: {
                     select: {
                         order: true,
