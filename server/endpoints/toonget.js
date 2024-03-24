@@ -20,7 +20,11 @@ module.exports.execute = function (req, res) {
                 genres: true,
                 tags: true,
                 chapters: true,
-                cover: true
+                cover: {
+                    select: {
+                        transport: true
+                    }
+                }
             }
         }).then((toon) => {
             res.status(200).json({ status: 200, toon: toon });
