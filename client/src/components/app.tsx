@@ -8,6 +8,7 @@ import { SessionProvider } from "../util/session";
 import { NavBar } from "./navbar";
 import { Home } from "./home";
 import { Directory } from "./directory";
+import { Toon } from "./toon";
 
 export const _App = () => {
     return (
@@ -16,6 +17,8 @@ export const _App = () => {
             <div className="page-content">
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/toon/:toonid" element={<Toon />} />
+                    <Route path="/reader/:toonid/:chapter" element={<Toon />} />
                     <Route path="/directory" element={<Directory />} />
                 </Routes>
             </div>
