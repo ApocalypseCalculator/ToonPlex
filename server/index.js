@@ -58,8 +58,7 @@ app.use(express.static('../client/dist', { extensions: ["html"] }));
 app.use(express.static('./static', { extensions: ["html"] }));
 
 app.use('/', function (req, res) {
-    res.send('hi');
-    // res.sendFile(path.resolve(__dirname, `../client/dist/index.html`));
+    res.sendFile(path.resolve(__dirname, `../client/dist/index.html`));
 })
 
 app.listen(process.env.PORT, () => {
