@@ -20,13 +20,7 @@ export const NavBar = () => {
             <div className="collapse navbar-collapse" id="navb">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                        <Link className="nav-link" to="/blog">Blog</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/timeline">Timeline</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/PatrickLin_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</Link>
+                        <Link className="nav-link" to="/directory">Directory</Link>
                     </li>
                 </ul>
                 <ul className={"navbar-nav ml-auto"}>
