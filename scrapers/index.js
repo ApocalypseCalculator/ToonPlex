@@ -15,9 +15,7 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
     let scraper = scrapers.find(s => s.domain === url.host);
     if (scraper) {
         console.log(`Scraping ${scraper.name}..`);
-        const child = fork(`${__dirname}/suite/${scraper.file}`, [], {
-            stdio: ['pipe', 'pipe', 'pipe', 'ipc']
-        });
+        const child = fork(`${__dirname}/suite/${scraper.file}`);
         child.on('spawn', () => {
             console.log('Scraper process spawned..');
             child.send({
