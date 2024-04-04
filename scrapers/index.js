@@ -14,10 +14,10 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
     let url = new URL(link);
     let scraper = scrapers.find(s => s.domain === url.host);
     if (scraper) {
-        console.log(`Scraping ${scraper.name}..`);
+        console.log(`Spawning ${scraper.name}...`);
         const child = fork(`${__dirname}/suite/${scraper.file}`);
         child.on('spawn', () => {
-            console.log('Scraper process spawned..');
+            console.log(`Process \x1b[33m[scraper-${child.pid}]\x1b[39m spawned...`);
             child.send({
                 command: 'scrape',
                 data: {
@@ -118,6 +118,9 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
                         }
                     }
                 })
+            }
+            else if (msg.event === "log") {
+                console.log(`\x1b[33m[scraper-${child.pid}]: \x1b[39m${msg.data}`);
             }
         });
 
