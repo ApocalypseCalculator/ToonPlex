@@ -2,3 +2,5 @@ node_modules
 *.db
 .env
 dist
+content
+tmp
