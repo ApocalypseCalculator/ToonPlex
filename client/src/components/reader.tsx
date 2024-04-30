@@ -58,16 +58,18 @@ export const Reader = () => {
 }
 
 function PaginationSelector(props: any) {
+    // paginator offers next/prev buttons as available
+    // button clicks also triggers scroll to top
     return <div className='pagination-selector'>
         {
             props.chapterdet.order > 1
             &&
-            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className='prev-chapter'>Previous Chapter</Link>
+            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className='prev-chapter' onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>Previous Chapter</Link>
         }
         {
             props.chapterdet.toon._count.chapters > props.chapterdet.order
             &&
-            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order + 1}`} className='next-chapter'>Next Chapter</Link>
+            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order + 1}`} className='next-chapter' onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>Next Chapter</Link>
         }
     </div>
 }
