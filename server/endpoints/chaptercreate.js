@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 module.exports.name = "/api/chapter/create";
 module.exports.method = "POST";
 module.exports.verify = function (req, res) {
-    return req.auth;
+    return req.auth && (req.auth.permissions.create || req.auth.permissions.admin);
 }
 
 module.exports.execute = function (req, res) {

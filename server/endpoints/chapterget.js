@@ -15,11 +15,11 @@ module.exports.execute = function (req, res) {
                     slug: req.params.toonslug
                 },
                 order: parseInt(req.params.chapter),
-                ...(!req.auth && {
+                ...((!req.auth || !req.auth.permissions.read) && {
                     toon: {
                         slug: req.params.toonslug,
                         published: true
-                    }}) // if not authorized, only published toons are viewable
+                    }}) // if not authorized/no read perms, only published toons are viewable
             },
             include: {
                 toon: {

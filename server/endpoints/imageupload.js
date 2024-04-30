@@ -3,14 +3,14 @@ const prisma = new PrismaClient();
 const fs = require('fs');
 const path = require('path');
 
-module.exports.name = "/api/image/upload/:transportId";
+module.exports.name = "/api/image/upload/:transportid";
 module.exports.method = "POST";
 module.exports.verify = function (req, res) {
-    return req.auth;
+    return (req.auth && (req.auth.permissions.create || req.auth.permissions.admin));
 }
 
 module.exports.execute = function (req, res) {
-    if (req.files.image && req.params.transportId) {
+    if (req.files.image && req.params.transportid) {
         prisma.image.findUnique({
             where: {
                 transport: req.params.transportId,
