@@ -10,7 +10,7 @@ export const Toon = () => {
     const { toonslug } = useParams();
 
     React.useEffect(() => {
-        if (toonslug !== "") {
+        if (toonslug !== "" && session.token !== "") {
             axios.get(`/api/toon/get/${toonslug}`, {
                 headers: {
                     Authorization: session.token
@@ -18,8 +18,8 @@ export const Toon = () => {
             }).then(res => {
                 if (res.data.status == 200) {
                     setToon(res.data.toon);
+                    setLoading(false);
                 }
-                setLoading(false);
             });
         }
     }, [session.token, toonslug]);
@@ -39,8 +39,7 @@ export const Toon = () => {
                                     <div className='row'>
                                         <div className='col-lg-6 col-md-7 col-12'>
                                             <div className='cover-art-box'>
-                                                <img src={`/api/image/get/${toon.cover.transport}`}>
-                                                </img>
+                                                <img src={`/api/image/get/${toon.cover.transport ?? "empty"}`} />
                                             </div>
                                         </div>
                                         <div className='col-lg-6 col-md-5 col-12'>
@@ -50,8 +49,8 @@ export const Toon = () => {
                                                     {toon.summary}
                                                 </p>
                                                 {
-                                                    toon.chapters.length > 0 
-                                                    ?? 
+                                                    toon.chapters && toon.chapters.length > 0 
+                                                    ? 
                                                     <div className='d-flex pt-4'>
                                                         <Link to={`/reader/${toonslug}/1`} className='anime-btn btn-dark border-change me-3'>
                                                             Read First
@@ -59,7 +58,7 @@ export const Toon = () => {
                                                         <Link to={`/reader/${toonslug}/${toon.chapters.length}`} className='anime-btn btn-dark'>
                                                             Read Last
                                                         </Link>
-                                                    </div>
+                                                    </div> : <></>
                                                 }
                                             </div>
                                         </div>
