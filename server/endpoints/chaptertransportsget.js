@@ -8,10 +8,10 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    if (req.params.chapterid) {
+    if (req.params.chapterid && !isNaN(parseInt(req.params.chapterid))) {
         prisma.chapter.findUnique({
             where: {
-                id: req.params.chapterid
+                id: parseInt(req.params.chapterid)
             },
             select: {
                 pages: {
