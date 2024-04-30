@@ -2,6 +2,9 @@ const express = require("express");
 const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 require('dotenv').config();
 
 const app = express();
@@ -19,9 +22,25 @@ app.use(fileUpload({
     abortOnLimit: true
 }));
 
-app.use((req, res, next) => {
-    if(req.header('authorization') === process.env.MASTERPWD) {
-        req.auth = true;
+app.use(async (req, res, next) => {
+    if(req.header('authorization')) {
+        try {
+            let user = jwt.verify(req.header('authorization'), process.env.JWTSECRET);
+            let queryusr = await prisma.user.findUnique({
+                where: {
+                    id: user.id
+                },
+                include: {
+                    permissions: true
+                }
+            });
+            if(queryusr && queryusr.permissions && !queryusr.permissions.disabled) {
+                req.auth = queryusr;
+            }
+        }
+        catch {
+            // unsucessful auth
+        }
     }
     next();
 });
