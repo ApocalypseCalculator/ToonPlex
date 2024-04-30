@@ -9,7 +9,7 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res) {
     if (req.params.toonslug && req.params.chapter) {
-        prisma.chapter.findUnique({
+        prisma.chapter.findFirst({
             where: {
                 toon: {
                     slug: req.params.toonslug
