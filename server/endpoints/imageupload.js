@@ -29,8 +29,9 @@ module.exports.execute = function (req, res) {
                     data: {
                         status: UploadStatus.UPLOADED
                     }
+                }).then(() => {
+                    res.status(200).json({ status: 200, message: `Image uploaded` });
                 });
-                res.status(200).json({ status: 200, message: `Image uploaded` });
             }
             else {
                 res.status(404).json({ error: `Transport not found` });
