@@ -27,20 +27,33 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
         });
         let toondata = {
             toonid: '',
+            cover: '',
             chapters: new Map()
         }
         let reqqueue = [];
         let scrapedone = false;
         
+        // home made request queue
+        // each request contains a condition
+        // iterate through requests and send them if the condition is met
         let reqinterval = setInterval(() => {
+            console.log(`${reqqueue.length} requests in queue`);
             for(let i = 0; i < reqqueue.length; i++) {
                 let req = reqqueue[i];
                 if(req.condition(toondata)) {
-                    axios[req.method](req.url, req.data, {
+                    let requrl = (typeof req.url === "function" ? req.url(toondata) : req.url);
+                    console.log(`Sending request ${req.method} to ${requrl}`);
+                    axios({
+                        method: req.method,
+                        url: requrl,
+                        data: req.data.image ? {
+                            image: fs.createReadStream(req.data.image)
+                        } : req.data,
                         headers: {
-                            Authorization: config.token,
+                            'Authorization': config.token,
                             'Content-Type': !req.data.image ? 'application/json' : 'multipart/form-data'
-                        }
+                        },
+                        maxRedirects: req.data.image ? 0 : 5
                     }).then(res => {
                         req.callback(res, toondata);
                         reqqueue.splice(i, 1);
@@ -66,7 +79,8 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
                     data: msg.data,
                     callback: (res, toondata) => {
                         if(res.data.status == 201) {
-                            toondata.toonid = res.data.toon;
+                            toondata.toonid = res.data.toon.id;
+                            toondata.cover = res.data.toon.cover.transport;
                             console.log(`Toon created with ID ${toondata.toonid}`);
                         }
                     }
@@ -108,9 +122,11 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
                 reqqueue.push({
                     condition: (toondata) => {return toondata.chapters.has(msg.data.chapter)},
                     method: 'post',
-                    url: `${config.host}/api/image/upload/${toondata.chapters.get(msg.data.chapter)[msg.data.page].image.transport}`,
+                    url: (toondata) => {
+                        return `${config.host}/api/image/upload/${toondata.chapters.get(msg.data.chapter)[msg.data.page].image.transport}`
+                    },
                     data: {
-                        image: fs.createReadStream(msg.path)
+                        image: msg.data.path
                     },
                     callback: (res, toondata) => {
                         if(res.status == 200) {
@@ -118,6 +134,26 @@ readline.question(`Enter URL to scrape (make sure it is the main page) >> `, lin
                         }
                     }
                 })
+            }
+            else if (msg.event === "cover") {
+                // special type of image event
+                // POST to cover's transport
+                // depends on successful completion of create toon call (implied by existence of cover transport)
+                reqqueue.push({
+                    condition: (toondata) => {return toondata.cover !== ''},
+                    method: 'post',
+                    url: (toondata) => {
+                        return `${config.host}/api/image/upload/${toondata.cover}`
+                    },
+                    data: {
+                        image: msg.data.path
+                    },
+                    callback: (res, toondata) => {
+                        if(res.status == 200) {
+                            console.log(`Uploaded cover successfully`);
+                        }
+                    }
+                });
             }
             else if (msg.event === "log") {
                 console.log(`\x1b[33m[scraper-${child.pid}]: \x1b[39m${msg.data}`);
