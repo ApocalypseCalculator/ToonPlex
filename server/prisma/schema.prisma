@@ -8,11 +8,12 @@ generator client {
 }
 
 model User {
-    id           Int          @id @default(autoincrement())
-    username     String       @unique
+    id           Int           @id @default(autoincrement())
+    username     String        @unique
     password     String
-    registertime DateTime     @default(now())
+    registertime DateTime      @default(now())
     permissions  Permissions?
+    readhistory  ReadHistory[]
 }
 
 model Permissions {
@@ -23,6 +24,17 @@ model Permissions {
     create   Boolean @default(false)
     admin    Boolean @default(false)
     disabled Boolean @default(false) // disabled account - handle at initial auth level
+}
+
+model ReadHistory {
+    id        Int      @id @default(autoincrement())
+    userid    Int
+    user      User     @relation(fields: [userid], references: [id])
+    chapterid Int
+    chapter   Chapter  @relation(fields: [chapterid], references: [id])
+    completed Boolean  @default(false)
+    page      Int      @default(0)
+    date      DateTime @default(now())
 }
 
 model Author {
@@ -67,13 +79,14 @@ model Toon {
 }
 
 model Chapter {
-    id     Int      @id @default(autoincrement())
-    name   String
-    date   DateTime
-    toon   Toon     @relation(fields: [toonid], references: [id])
-    toonid Int
-    order  Int // chapter number
-    pages  Page[]
+    id          Int           @id @default(autoincrement())
+    name        String
+    date        DateTime
+    toon        Toon          @relation(fields: [toonid], references: [id])
+    toonid      Int
+    order       Int // chapter number
+    pages       Page[]
+    readhistory ReadHistory[]
 }
 
 model Page {
