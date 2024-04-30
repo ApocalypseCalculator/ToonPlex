@@ -77,9 +77,13 @@ module.exports.execute = function (req, res) {
                             path: `${toon.id}/cover.${req.body.ext}`
                         }
                     }
+                },
+                include: {
+                    cover: true
                 }
+            }).then((newtoon) => {
+                res.status(201).json({ status: 201, message: `Toon created`, toon: newtoon});
             });
-            res.status(201).json({ status: 201, message: `Toon created`, toon: toon.id});
         })
     }
     else {
