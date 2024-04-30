@@ -10,13 +10,13 @@ export const Toon = () => {
     const { toonslug } = useParams();
 
     React.useEffect(() => {
-        if (toonslug !== "" && session.token !== "") {
+        if (toonslug !== "") {
             axios.get(`/api/toon/get/${toonslug}`, {
                 headers: {
                     Authorization: session.token
                 }
             }).then(res => {
-                if (res.data.status == 200) {
+                if (res.data.status == 200 && res.data.toon) {
                     setToon(res.data.toon);
                     setLoading(false);
                 }
