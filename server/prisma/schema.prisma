@@ -9,25 +9,25 @@ generator client {
 
 model Author {
     id    Int    @id @default(autoincrement())
-    name  String
+    name  String @unique
     toons Toon[]
 }
 
 model Artist {
     id    Int    @id @default(autoincrement())
-    name  String
+    name  String @unique
     toons Toon[]
 }
 
 model Genre {
     id    Int    @id @default(autoincrement())
-    name  String
+    name  String @unique
     toons Toon[]
 }
 
 model Tag {
     id    Int    @id @default(autoincrement())
-    name  String
+    name  String @unique
     toons Toon[]
 }
 
