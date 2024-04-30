@@ -5,14 +5,14 @@ import { Link, useParams } from 'react-router-dom';
 
 export const Reader = () => {
     const session = React.useContext(SessionContext);
-    const [chapterdet, setChapterdet] = React.useState({} as any);
+    const [chapterdet, setChapterdet] = React.useState({pages: []} as any);
     const [loading, setLoading] = React.useState(true);
 
     const { toonslug, chapter } = useParams();
 
     React.useEffect(() => {
-        if (toonslug !== "" && chapter !== "") {
-            axios.get(`/api/chapter/${toonslug}/${chapter}`, {
+        if (toonslug !== "" && chapter !== "" && session.token !== "") {
+            axios.get(`/api/chapter/get/${toonslug}/${chapter}`, {
                 headers: {
                     Authorization: session.token
                 }
@@ -29,7 +29,9 @@ export const Reader = () => {
         <>
             <section>
                 <div className="container">
-                    <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} />
+                    {
+                        !loading ? <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} /> : <></>
+                    }
                     <div className='read-container'>
                         {
                             loading ?
@@ -46,7 +48,9 @@ export const Reader = () => {
                                 </div>
                         }
                     </div>
-                    <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} />
+                    {
+                        !loading ? <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} /> : <></>
+                    }
                 </div>
             </section>
         </>
