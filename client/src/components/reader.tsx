@@ -11,16 +11,16 @@ export const Reader = () => {
     const { toonslug, chapter } = useParams();
 
     React.useEffect(() => {
-        if (toonslug !== "" && chapter !== "" && session.token !== "") {
+        if (toonslug !== "" && chapter !== "") {
             axios.get(`/api/chapter/get/${toonslug}/${chapter}`, {
                 headers: {
                     Authorization: session.token
                 }
             }).then(res => {
-                if (res.data.status == 200) {
+                if (res.data.status == 200 && res.data.chapter) {
                     setChapterdet(res.data.chapter);
+                    setLoading(false);
                 }
-                setLoading(false);
             });
         }
     }, [session.token, toonslug, chapter]);
