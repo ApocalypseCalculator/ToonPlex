@@ -9,6 +9,7 @@ import { NavBar } from "./navbar";
 import { Home } from "./home";
 import { Directory } from "./directory";
 import { Toon } from "./toon";
+import { Reader } from "./reader";
 
 export const _App = () => {
     return (
@@ -18,7 +19,7 @@ export const _App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/toon/:toonslug" element={<Toon />} />
-                    <Route path="/reader/:toonslug/:chapter" element={<Toon />} />
+                    <Route path="/reader/:toonslug/:chapter" element={<Reader />} />
                     <Route path="/directory" element={<Directory />} />
                 </Routes>
             </div>
