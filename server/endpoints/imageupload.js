@@ -1,5 +1,7 @@
 const { PrismaClient, UploadStatus } = require('@prisma/client');
 const prisma = new PrismaClient();
+const fs = require('fs');
+const path = require('path');
 
 module.exports.name = "/api/image/upload/:transportId";
 module.exports.method = "POST";
@@ -16,6 +18,9 @@ module.exports.execute = function (req, res) {
             }
         }).then((image) => {
             if(image) {
+                if(!fs.existsSync(path.dirname(`./content/${image.path}`))) {
+                    fs.mkdirSync(path.dirname(`./content/${image.path}`), {recursive: true});
+                }
                 req.files.image.mv(`./content/${image.path}`);
                 prisma.image.update({
                     where: {
