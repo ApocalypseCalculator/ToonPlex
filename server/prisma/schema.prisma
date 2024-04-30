@@ -7,6 +7,23 @@ generator client {
     provider = "prisma-client-js"
 }
 
+model User {
+    id          Int          @id @default(autoincrement())
+    username    String       @unique
+    password    String
+    permissions Permissions?
+}
+
+model Permissions {
+    id       Int     @id @default(autoincrement())
+    userid   Int     @unique
+    user     User    @relation(fields: [userid], references: [id])
+    read     Boolean @default(false)
+    create   Boolean @default(false)
+    admin    Boolean @default(false)
+    disabled Boolean @default(false) // disabled account - handle at initial auth level
+}
+
 model Author {
     id    Int    @id @default(autoincrement())
     name  String @unique
