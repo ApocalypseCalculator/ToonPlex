@@ -98,7 +98,7 @@ export const Toon = () => {
             </section>
             {
                 !loading
-                ?? 
+                ? 
                 <section className='relese sec-mar'>
                     <div className='container'>
                         <div className='row'>
@@ -116,7 +116,7 @@ export const Toon = () => {
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> : <> </>
             }
         </>
     )
