@@ -15,7 +15,7 @@ module.exports.execute = function (req, res) {
                     slug: req.params.toonslug
                 },
                 order: parseInt(req.params.chapter),
-                ...((!req.auth || !req.auth.permissions.read) && {
+                ...((!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin)) && {
                     toon: {
                         slug: req.params.toonslug,
                         published: true
