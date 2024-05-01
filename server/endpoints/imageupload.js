@@ -11,7 +11,7 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res) {
     if (req.files.image && req.params.transportid) {
-        prisma.image.findUnique({
+        prisma.image.findFirst({
             where: {
                 transport: req.params.transportId,
                 status: UploadStatus.PENDING
