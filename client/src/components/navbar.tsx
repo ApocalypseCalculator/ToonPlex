@@ -7,9 +7,7 @@ export const NavBar = () => {
     const nav = useNavigate();
 
     const session = React.useContext(SessionContext);
-
-    const [tokenInp, setTokenInp] = React.useState("");
-
+    
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <Link to="/" className="navbar-brand">Home</Link>
