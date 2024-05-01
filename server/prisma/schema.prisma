@@ -26,14 +26,13 @@ model Permissions {
     disabled Boolean @default(false) // disabled account - handle at initial auth level
 }
 
+// existence of a ReadHistory record implies user read the given chapter
 model ReadHistory {
     id        Int      @id @default(autoincrement())
     userid    Int
     user      User     @relation(fields: [userid], references: [id])
     chapterid Int
     chapter   Chapter  @relation(fields: [chapterid], references: [id])
-    completed Boolean  @default(false)
-    page      Int      @default(0)
     date      DateTime @default(now())
 }
 
