@@ -84,7 +84,9 @@ module.exports.execute = function (req, res) {
             }).then((newtoon) => {
                 res.status(201).json({ status: 201, message: `Toon created`, toon: newtoon});
             });
-        })
+        }).catch(err => {
+            res.status(500).json({ error: `Server error` });
+        });
     }
     else {
         res.status(400).json({ error: `Invalid form` });
