@@ -23,22 +23,24 @@ app.use(fileUpload({
 }));
 
 app.use(async (req, res, next) => {
-    if(req.header('authorization')) {
+    if(req.headers['authorization']) {
         try {
-            let user = jwt.verify(req.header('authorization'), process.env.JWTSECRET);
-            let queryusr = await prisma.user.findUnique({
-                where: {
-                    id: user.id
-                },
-                include: {
-                    permissions: true
+            let user = jwt.verify(req.headers['authorization'], process.env.JWTSECRET);
+            if(user.userid && !isNaN(parseInt(user.userid))) {
+                let queryusr = await prisma.user.findUnique({
+                    where: {
+                        id: parseInt(user.userid)
+                    },
+                    include: {
+                        permissions: true
+                    }
+                });
+                if(queryusr && queryusr.permissions && !queryusr.permissions.disabled) {
+                    req.auth = queryusr;
                 }
-            });
-            if(queryusr && queryusr.permissions && !queryusr.permissions.disabled) {
-                req.auth = queryusr;
             }
         }
-        catch {
+        catch(err) {
             // unsucessful auth
         }
     }
