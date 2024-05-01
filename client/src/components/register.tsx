@@ -58,7 +58,7 @@ export const Register = () => {
             <div className={"jumbotron jumbotron-fluid"}>
                 <div className={"container"}>
                     <h1>Register</h1>
-                    <p>Register a beta account :p (for some cool features coming soon...)</p>
+                    <p>Register an account to read restricted toons and keep track of your read history</p>
                 </div>
             </div>
             <div className={"container"}>
