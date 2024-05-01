@@ -10,6 +10,7 @@ import { Home } from "./home";
 import { Directory } from "./directory";
 import { Toon } from "./toon";
 import { Reader } from "./reader";
+import { Login } from "./login";
 
 export const _App = () => {
     return (
@@ -21,6 +22,7 @@ export const _App = () => {
                     <Route path="/toon/:toonslug" element={<Toon />} />
                     <Route path="/reader/:toonslug/:chapter" element={<Reader />} />
                     <Route path="/directory" element={<Directory />} />
+                    <Route path="/login" element={<Login />} />
                 </Routes>
             </div>
         </div>
