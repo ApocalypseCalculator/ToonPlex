@@ -40,21 +40,19 @@ export const NavBar = () => {
                                     </div>
                                 </> :
                                     <>
-                                    <form className="form-inline">
-                                        <input type="text" className="form-control"
-                                        placeholder="Enter your token"
-                                        onChange={text => {
-                                            setTokenInp(text.target.value);
+                                    <Link to={"/login"} onClick={(ev) => {
+                                            ev.preventDefault();
+                                            nav("/login");
                                         }}>
-                                        </input>
-                                        <button type="submit"
-                                            className="btn btn-primary" onClick={(ev) => {
-                                                ev.preventDefault();
-                                                session.updateToken(tokenInp);
-                                            }}>
-                                                Save
-                                        </button>
-                                    </form></>
+                                            <b>Log in</b>
+                                        </Link>
+                                        &nbsp;or&nbsp;
+                                        <Link to={"/register"} onClick={(ev) => {
+                                            ev.preventDefault();
+                                            nav("/register");
+                                        }}>
+                                            <b>Register</b>
+                                        </Link></>
                             }
                         </span>
                     </li>
