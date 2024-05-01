@@ -16,7 +16,13 @@ module.exports.execute = function (req, res) {
                 username: req.body.username
             },
             include: {
-                permissions: true
+                permissions: {
+                    select: {
+                        read: true,
+                        create: true,
+                        admin: true
+                    }
+                }
             }
         }).then((user) => {
             if (!user) {
