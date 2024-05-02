@@ -37,6 +37,8 @@ export const Reader = () => {
                             loading ?
                                 <>Loading... </>
                                 :
+                                <>
+                                <h3>{chapterdet.name}</h3><br/>
                                 <div className='reading-content'>
                                     {
                                         chapterdet.pages.map((page: any, i: number) => {
@@ -45,7 +47,7 @@ export const Reader = () => {
                                             </div>
                                         })
                                     }
-                                </div>
+                                </div></>
                         }
                     </div>
                     {
