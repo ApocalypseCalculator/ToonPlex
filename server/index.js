@@ -7,6 +7,18 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 require('dotenv').config();
 
+/*
+required .env configurations: 
+DB_URL: the URL to the database (recommended Postgres)
+JWTSECRET: the secret for JWT verification
+PORT: the port to run the server on
+*/
+
+if(!process.env.DB_URL || !process.env.JWTSECRET || !process.env.PORT) {
+    console.error('\x1b[31mMissing required environment variables\x1b[39m');
+    process.exit(1);
+}
+
 const app = express();
 
 app.enable('trust proxy');
