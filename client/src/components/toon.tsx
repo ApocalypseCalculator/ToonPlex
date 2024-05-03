@@ -26,7 +26,7 @@ export const Toon = () => {
 
     return (
         <>
-            <section>
+            <section className='toondetails'>
                 <div className="container">
                     <div className='row'>
                         {
@@ -52,10 +52,10 @@ export const Toon = () => {
                                                     toon.chapters && toon.chapters.length > 0 
                                                     ? 
                                                     <div className='d-flex pt-4'>
-                                                        <Link to={`/reader/${toonslug}/1`} className='anime-btn btn-dark border-change me-3'>
+                                                        <Link to={`/reader/${toonslug}/1`} className='anime-btn btn btn-primary mr-3'>
                                                             Read First
                                                         </Link>
-                                                        <Link to={`/reader/${toonslug}/${toon.chapters.length}`} className='anime-btn btn-dark'>
+                                                        <Link to={`/reader/${toonslug}/${toon.chapters.length}`} className='anime-btn btn btn-primary'>
                                                             Read Last
                                                         </Link>
                                                     </div> : <></>
@@ -99,18 +99,18 @@ export const Toon = () => {
             {
                 !loading
                 ? 
-                <section className='relese sec-mar'>
+                <section className='release sec-mar'>
                     <div className='container'>
                         <div className='row'>
                             <div className='col-md-12 overflow-auto'>
                                 {
-                                    toon.chapters.map((chapter : any) => {
-                                        return <h5>
+                                    toon.chapters.reverse().map((chapter : any) => {
+                                        return <><h5>
                                             <Link to={`/reader/${toonslug}/${chapter.order}`}>
                                                 Chapter {chapter.order}
                                             </Link>
                                             <span>{new Date(chapter.date).toDateString()}</span>
-                                        </h5>
+                                        </h5><hr/></>
                                     })
                                 }
                             </div>
@@ -118,6 +118,7 @@ export const Toon = () => {
                     </div>
                 </section> : <> </>
             }
+            <link rel="stylesheet" href="/toonpage.css" as="style"></link>
         </>
     )
 }
