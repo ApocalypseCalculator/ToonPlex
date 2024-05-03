@@ -11,6 +11,10 @@
     padding-top: 15px;
 }
 
+.release span {
+    float: right;
+}
+
 .chapterlist {
     border-color: white;
     border: solid;
