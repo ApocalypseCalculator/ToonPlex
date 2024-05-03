@@ -35,7 +35,7 @@ export const Reader = () => {
                             <div className='chapter-info mt-3'>
                                 <p><Link to={`/toon/${toonslug}`}>Back to Toon</Link></p>
                                 <p>{chapterdet.toon.title}, chapter {chapterdet.order} of {chapterdet.toon._count.chapters}</p>
-                                <p>Date published: {new Date(chapterdet.date).toLocaleDateString()}</p>
+                                <p>Date published: {new Date(chapterdet.date).toDateString()}</p>
                             </div>
                             <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} />
                         </> : <></>
