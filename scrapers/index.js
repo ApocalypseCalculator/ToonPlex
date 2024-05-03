@@ -10,6 +10,14 @@ const readline = require('node:readline').createInterface({
 });
 let token = '';
 
+if(fs.existsSync(config.downloadpath)) {
+    console.log(`\x1b[31mWarning: it is recommended to clear the download directory before each run to prevent excessive disk usage\x1b[39m`);
+}
+else {
+    console.log(`Creating download directory...`);
+    fs.mkdirSync(config.downloadpath);
+}
+
 login(mainScraper);
 
 function login(callback) {
