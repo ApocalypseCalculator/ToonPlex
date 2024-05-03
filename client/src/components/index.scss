@@ -43,3 +43,23 @@
 .toondetails {
     margin-top: 3vh;
 }
+
+.toondirectory {
+    margin-top: 3vh;
+    margin-bottom: 4vh;
+}
+
+.gridimg-preview {
+    width: 100%;
+}
+
+.dir-toontitle {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.dir-toonurl {
+    color: whitesmoke;
+    text-decoration: none;
+}

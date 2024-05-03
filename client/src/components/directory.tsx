@@ -24,7 +24,7 @@ export const Directory = () => {
     return (
         <>
             <section>
-                <div className="container">
+                <div className="container toondirectory">
                     <div className='row'>
                     {
                         loading ?
@@ -33,19 +33,21 @@ export const Directory = () => {
                             toons.length == 0 ? 
                             <>No toons at this time</> : 
                             toons.map((toon) => {
-                                return <div className='col-lg-3 col-sm-6 col-12'>
+                                return <div className='col-6 col-sm-3 col-lg-2'>
                                     <div className='webtoon-gridview'>
                                         <Link to={`/toon/${toon.slug}`} className='webtoon-gridimg'>
-                                            <img src={`/api/image/get/${toon.cover.transport}`}></img>
+                                            <img className='gridimg-preview' src={`/api/image/get/${toon.cover.transport}`}></img>
                                         </Link>
                                         <div className='d-flex justify-content-between'>
                                             <p className='text'>
                                                 {toon.status}
                                             </p>
                                         </div>
-                                        <Link to={`/toon/${toon.slug}`}>
-                                            <p>{toon.title}</p>
-                                        </Link>
+                                        <h5 className='dir-toontitle'>
+                                            <Link to={`/toon/${toon.slug}`} className='dir-toonurl'>
+                                                {toon.title}
+                                            </Link>
+                                        </h5>
                                     </div>
                                 </div>
                             })
