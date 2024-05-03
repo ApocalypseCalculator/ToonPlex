@@ -101,7 +101,7 @@ export const Toon = () => {
                 ? 
                 <section className='release sec-mar'>
                     <div className='container'>
-                        <div className='row'>
+                        <div className='row chapterlist'>
                             <div className='col-md-12 overflow-auto'>
                                 {
                                     toon.chapters.reverse().map((chapter : any) => {
