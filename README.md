@@ -68,6 +68,7 @@ after this, you should be able to use headless mode for a while.
 1. Create a script file under `scrapers/suite`
 2. Inside `/scrapers/suite/index.js`, create a new object entry containing the name, file name, and targeted host for the scraper
 3. Write your script! The scraper will automatically fork your script as a child process after matching the host. The script should listen to / dispatch the following IPC messages: 
+
 | Message | Description |
 | --- | --- |
 | `{command: "scrape"}` | Dispatched by the main scraper, the script should initiate the scrape upon receiving this message |
