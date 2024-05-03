@@ -2,7 +2,18 @@ const scrapers = require('./suite');
 const axios = require('axios').default;
 const { fork } = require('child_process');
 const fs = require('fs');
-const config = require('./config');
+require('dotenv').config();
+
+/*
+required .env configurations: 
+HOST: the host of the server (include scheme and origin, e.g. http://127.0.0.1:8080)
+DOWNLOADPATH: the path to download images to (e.g. ./tmp)
+*/
+
+if(!process.env.HOST || !process.env.DOWNLOADPATH) {
+    console.error('\x1b[31mMissing required environment variables\x1b[39m');
+    process.exit(1);
+}
 
 const readline = require('node:readline').createInterface({
     input: process.stdin,
@@ -10,12 +21,12 @@ const readline = require('node:readline').createInterface({
 });
 let token = '';
 
-if(fs.existsSync(config.downloadpath)) {
-    console.log(`\x1b[31mWarning: it is recommended to clear the download directory before each run to prevent excessive disk usage\x1b[39m`);
+if(fs.existsSync(process.env.DOWNLOADPATH)) {
+    console.log(`\x1b[33mWarning: it is recommended to clear the download directory before each run to prevent excessive disk usage\x1b[39m`);
 }
 else {
     console.log(`Creating download directory...`);
-    fs.mkdirSync(config.downloadpath);
+    fs.mkdirSync(process.env.DOWNLOADPATH);
 }
 
 login(mainScraper);
@@ -23,7 +34,7 @@ login(mainScraper);
 function login(callback) {
     readline.question('Enter username >> ', username => {
         readline.question('Enter password >> ', password => {
-            axios.post(`${config.host}/api/user/login`, {
+            axios.post(`${process.env.HOST}/api/user/login`, {
                 username: username,
                 password: password
             }).then(res => {
@@ -53,7 +64,7 @@ function mainScraper() {
             console.log(`Spawning ${scraper.name}...`);
             const child = fork(`${__dirname}/suite/${scraper.file}`);
             child.on('spawn', () => {
-                console.log(`Process \x1b[33m[scraper-${child.pid}]\x1b[39m spawned...`);
+                console.log(`Process \x1b[32m[scraper-${child.pid}]\x1b[39m spawned...`);
                 child.send({
                     command: 'scrape',
                     data: {
@@ -77,7 +88,7 @@ function mainScraper() {
                     reqqueue.push({
                         condition: () => { return true },
                         method: 'post',
-                        url: `${config.host}/api/toon/create`,
+                        url: `${process.env.HOST}/api/toon/create`,
                         data: msg.data,
                         callback: (res, toondata) => {
                             if (res.data.status == 201) {
@@ -96,7 +107,7 @@ function mainScraper() {
                     reqqueue.push({
                         condition: (toondata) => { return toondata.toonid !== '' },
                         method: 'post',
-                        url: `${config.host}/api/chapter/create`,
+                        url: `${process.env.HOST}/api/chapter/create`,
                         data: {
                             toonid: toondata.toonid, ...msg.data
                         },
@@ -106,7 +117,7 @@ function mainScraper() {
                                 reqqueue.push({
                                     condition: (toondata) => { return true },
                                     method: 'get',
-                                    url: `${config.host}/api/chapter/transports/get/${res.data.chapter}`,
+                                    url: `${process.env.HOST}/api/chapter/transports/get/${res.data.chapter}`,
                                     data: {},
                                     callback: (res, toondata) => {
                                         toondata.chapters.set(msg.data.order, res.data.transports);
@@ -125,7 +136,7 @@ function mainScraper() {
                         condition: (toondata) => { return toondata.chapters.has(msg.data.chapter) },
                         method: 'post',
                         url: (toondata) => {
-                            return `${config.host}/api/image/upload/${toondata.chapters.get(msg.data.chapter)[msg.data.page].image.transport}`
+                            return `${process.env.HOST}/api/image/upload/${toondata.chapters.get(msg.data.chapter)[msg.data.page].image.transport}`
                         },
                         data: {
                             image: msg.data.path
@@ -145,7 +156,7 @@ function mainScraper() {
                         condition: (toondata) => { return toondata.cover !== '' },
                         method: 'post',
                         url: (toondata) => {
-                            return `${config.host}/api/image/upload/${toondata.cover}`
+                            return `${process.env.HOST}/api/image/upload/${toondata.cover}`
                         },
                         data: {
                             image: msg.data.path
@@ -158,7 +169,7 @@ function mainScraper() {
                     });
                 }
                 else if (msg.event === "log") {
-                    console.log(`\x1b[33m[scraper-${child.pid}]: \x1b[39m${msg.data}`);
+                    console.log(`\x1b[32m[scraper-${child.pid}]: \x1b[39m${msg.data}`);
                 }
             });
 
