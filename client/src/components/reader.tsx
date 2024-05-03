@@ -60,7 +60,6 @@ export const Reader = () => {
                     }
                 </div>
             </section>
-            <link rel="stylesheet" href="/reader.css" as="style"></link>
         </>
     )
 }

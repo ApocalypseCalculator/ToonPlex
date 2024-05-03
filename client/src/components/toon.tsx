@@ -118,7 +118,6 @@ export const Toon = () => {
                     </div>
                 </section> : <> </>
             }
-            <link rel="stylesheet" href="/toonpage.css" as="style"></link>
         </>
     )
 }
