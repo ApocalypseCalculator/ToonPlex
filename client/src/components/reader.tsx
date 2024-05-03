@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 export const Reader = () => {
     const session = React.useContext(SessionContext);
-    const [chapterdet, setChapterdet] = React.useState({pages: []} as any);
+    const [chapterdet, setChapterdet] = React.useState({ pages: [] } as any);
     const [loading, setLoading] = React.useState(true);
 
     const { toonslug, chapter } = useParams();
@@ -28,9 +28,12 @@ export const Reader = () => {
     return (
         <>
             <section>
-                <div className="container">
+                <div className="container readerpage">
                     {
-                        !loading ? <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} /> : <></>
+                        !loading ? <>
+                            <h3 className='chapter-title'>{chapterdet.name}</h3>
+                            <PaginationSelector toonslug={toonslug} chapterdet={chapterdet} />
+                        </> : <></>
                     }
                     <div className='read-container'>
                         {
@@ -38,16 +41,13 @@ export const Reader = () => {
                                 <>Loading... </>
                                 :
                                 <>
-                                <h3>{chapterdet.name}</h3><br/>
-                                <div className='reading-content'>
-                                    {
-                                        chapterdet.pages.map((page: any, i: number) => {
-                                            return <div className='page-break no-gaps' key={`page-${i + 1}`}>
-                                                <img src={`/api/image/get/${page.image.transport}`} className='chapter-img'></img>
-                                            </div>
-                                        })
-                                    }
-                                </div></>
+                                    <div className='reading-content'>
+                                        {
+                                            chapterdet.pages.map((page: any, i: number) => {
+                                                return <PageImage key={`page-${i + 1}`} url={page.image.transport} />
+                                            })
+                                        }
+                                    </div></>
                         }
                     </div>
                     {
@@ -55,8 +55,22 @@ export const Reader = () => {
                     }
                 </div>
             </section>
+            <link rel="stylesheet" href="/reader.css" as="style"></link>
         </>
     )
+}
+
+function PageImage(props: any) {
+    const [loadmsg, setLoadmsg] = React.useState("Loading...");
+    return <div className='page-break no-gaps' key={props.key}>
+        <img
+            style={loadmsg === "" ? {} : { display: 'none' }}
+            src={`/api/image/get/${props.url}`}
+            className='chapter-img'
+            onLoad={() => { setLoadmsg("") }}
+            onError={() => setLoadmsg("An error occurred loading this page")} />
+        <p style={loadmsg === "" ? { display: 'none' } : {}}>{loadmsg}</p>
+    </div>
 }
 
 function PaginationSelector(props: any) {
@@ -66,12 +80,14 @@ function PaginationSelector(props: any) {
         {
             props.chapterdet.order > 1
             &&
-            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className='prev-chapter' onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>Previous Chapter</Link>
+            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className='prev-chapter btn btn-primary mr-5' 
+                onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}>Previous Chapter</Link>
         }
         {
             props.chapterdet.toon._count.chapters > props.chapterdet.order
             &&
-            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order + 1}`} className='next-chapter' onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>Next Chapter</Link>
+            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order + 1}`} className='next-chapter btn btn-primary' 
+                onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}>Next Chapter</Link>
         }
     </div>
 }
