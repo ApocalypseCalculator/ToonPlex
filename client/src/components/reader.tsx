@@ -84,7 +84,7 @@ function PaginationSelector(props: any) {
         {
             props.chapterdet.order > 1
             &&
-            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className='prev-chapter btn btn-primary mr-5' 
+            <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className={`prev-chapter btn btn-primary${props.chapterdet.toon._count.chapters > props.chapterdet.order ? ' mr-3' : ''}`} 
                 onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}>Previous Chapter</Link>
         }
         {
