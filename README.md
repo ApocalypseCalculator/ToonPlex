@@ -1,6 +1,6 @@
 # ToonPlex
 
-A host webtoons/manga and an accompanying scraper that uploads to your ToonPlex server. 
+A webtoon/manga host and an accompanying scraper that uploads to your ToonPlex server. 
 
 
 ## Introduction
