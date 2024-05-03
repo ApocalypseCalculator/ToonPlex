@@ -1,0 +1,23 @@
+.release hr {
+    width: 100%;
+    height: 1px;
+    background-color: lightgrey;
+    opacity: 1;
+    margin: 8px 0;
+}
+
+.release h5 {
+    margin-bottom: 0;
+    padding-top: 15px;
+}
+
+.release row {
+    border-color: white;
+    border: solid;
+    margin-top: 3vh;
+    margin-bottom: 4vh;
+}
+
+.toondetails {
+    margin-top: 3vh;
+}
