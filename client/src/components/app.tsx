@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { SessionProvider } from "../util/session";
 
-// import "./index.scss";
+import "./index.scss";
 
 import { NavBar } from "./navbar";
 import { Home } from "./home";
