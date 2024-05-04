@@ -3,6 +3,8 @@ import { default as axios } from 'axios';
 import { SessionContext } from "../util/session";
 import { Link, useSearchParams } from 'react-router-dom';
 
+const VALIDPARAMS = ['page', 'author', 'artist', 'genre', 'tag', 'status'];
+
 export const Directory = () => {
     const session = React.useContext(SessionContext);
     const [toons, setToons] = React.useState<any[]>([]);
@@ -13,7 +15,9 @@ export const Directory = () => {
         if (session.data.ready) {
             let queries = [] as string[];
             searchParams.forEach((value, key) => {
-                queries.push(`${key}=${value}`);
+                if (VALIDPARAMS.includes(key)) {
+                    queries.push(`${key}=${value}`);
+                }
             });
             let append = queries.length > 0 ? `?${queries.join("&")}` : "";
             axios.get(`/api/toon/list${append}`, {
@@ -33,6 +37,9 @@ export const Directory = () => {
         <>
             <section>
                 <div className="container toondirectory">
+                    {
+                        <SearchParamBadges searchParams={searchParams} setSearchParams={setSearchParams} />
+                    }
                     <div className='row'>
                         {
                             loading ?
@@ -65,4 +72,30 @@ export const Directory = () => {
             </section>
         </>
     )
+}
+
+function SearchParamBadges(props: any) {
+    const [curvalids, setCurvalids] = React.useState([] as any[]);
+    React.useEffect(() => {
+        setCurvalids(VALIDPARAMS.filter((param) => props.searchParams.has(param)));
+    }, [props.searchParams]);
+    return <>
+        {
+            curvalids.length > 0 ? <div className='searchparamarea'>
+                <h4 className='searchquerytitle'>Filters Applied</h4>
+                <div className='row'>
+                    {
+                        curvalids.map((param) => {
+                            return <span className="badge badge-pill badge-primary searchqueryparam dirparampill">
+                                {param}: {props.searchParams.get(param)} &nbsp;
+                                <button type="button" className="close searchqueryparam">
+                                    <span>×</span>
+                                </button>
+                            </span>
+                        })
+                    }
+                </div>
+            </div> : <></>
+        }
+    </>
 }
