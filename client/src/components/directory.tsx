@@ -11,7 +11,12 @@ export const Directory = () => {
 
     React.useEffect(() => {
         if (session.data.ready) {
-            axios.get('/api/toon/list', {
+            let queries = [] as string[];
+            searchParams.forEach((value, key) => {
+                queries.push(`${key}=${value}`);
+            });
+            let append = queries.length > 0 ? `?${queries.join("&")}` : "";
+            axios.get(`/api/toon/list${append}`, {
                 headers: {
                     Authorization: session.data.token
                 }
