@@ -8,7 +8,7 @@ export const Register = () => {
     const nav = useNavigate();
     const session = React.useContext(SessionContext);
 
-    if(session.token) {
+    if(session.data.token) {
         nav("/");
     }
 
