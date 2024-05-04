@@ -33,12 +33,17 @@ export const Directory = () => {
         }
     }, [session.data, searchParams]);
 
+    function updateSearchParams(func: (oldparams: URLSearchParams) => URLSearchParams) {
+        setSearchParams(func);
+        setLoading(true);
+    }
+
     return (
         <>
             <section>
                 <div className="container toondirectory">
                     {
-                        <SearchParamBadges searchParams={searchParams} setSearchParams={setSearchParams} />
+                        <SearchParamBadges searchParams={searchParams} setSearchParams={updateSearchParams} />
                     }
                     <div className='row'>
                         {
@@ -88,7 +93,12 @@ function SearchParamBadges(props: any) {
                         curvalids.map((param) => {
                             return <span className="badge badge-pill badge-primary searchqueryparam dirparampill">
                                 {param}: {props.searchParams.get(param)} &nbsp;
-                                <button type="button" className="close searchqueryparam">
+                                <button type="button" className="close searchqueryparam" onClick={() => {
+                                    props.setSearchParams((oldparams : URLSearchParams) => {
+                                        oldparams.delete(param);
+                                        return oldparams;
+                                    });
+                                }}>
                                     <span>×</span>
                                 </button>
                             </span>
