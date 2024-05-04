@@ -25,7 +25,7 @@ export const NavBar = () => {
                     <li className={"nav-item"}>
                         <span id={"navbaruser"}>
                             {
-                                session.token !== "" ? <>
+                                session.data.token !== "" ? <>
                                     <a className={"nav-link dropdown-toggle"} href={"#"} data-toggle={"dropdown"}>
                                         Signed in
                                     </a>
