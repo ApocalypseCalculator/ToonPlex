@@ -97,6 +97,6 @@ module.exports.execute = function (req, res) {
             }
         })
     ]).then(([count, toons]) => {
-        res.json({ status: 200, offset: offset, amount: amount, total: count, toons: toons });
-    })
+        res.json({ status: 200, offset: offset, pagesize: amount, total: count, toons: toons });
+    });
 }
