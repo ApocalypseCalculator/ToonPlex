@@ -87,7 +87,7 @@ function SearchParamBadges(props: any) {
     return <>
         {
             curvalids.length > 0 ? <div className='searchparamarea'>
-                <h4 className='searchquerytitle'>Filters Applied</h4>
+                <div className='row'><h4 className='searchquerytitle'>Filters Applied</h4></div>
                 <div className='row'>
                     {
                         curvalids.map((param) => {
