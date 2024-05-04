@@ -12,7 +12,7 @@ module.exports.execute = function (req, res) {
         prisma.chapter.create({
             data: {
                 name: req.body.name,
-                date: new Date(req.body.date),
+                date: (isNaN(Date.parse(req.body.date)) ? new Date() : new Date(req.body.date)),
                 toonid: req.body.toonid,
                 order: req.body.order,
                 pages: {
