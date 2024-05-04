@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer-extra').default;
 const fs = require('fs');
-const config = require('../config');
 const axios = require('axios').default;
 
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -114,7 +113,7 @@ async function scrape(url) {
         }
     });
 
-    const toondir = `${config.downloadpath}/${getLastSection(url)}`;
+    const toondir = `${process.env.DOWNLOADPATH}/${getLastSection(url)}`;
     if (!fs.existsSync(toondir)) {
         fs.mkdirSync(toondir);
         process.send({
