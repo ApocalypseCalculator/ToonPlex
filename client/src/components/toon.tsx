@@ -68,19 +68,47 @@ export const Toon = () => {
                                     <h3>Details</h3>
                                     <p>
                                         <span>Author(s): </span>
-                                        <b>{toon.authors.map((e: any) => {return e.name}).join(', ')}</b>
+                                        {
+                                            toon.authors.map((e: any, i: number) => {
+                                                return <>
+                                                    <b><Link to={`/directory?author=${encodeURIComponent(e.name)}`}>{e.name}</Link></b>
+                                                    {i < toon.authors.length - 1 ? ', ' : ''}
+                                                </>
+                                            })
+                                        }
                                     </p>
                                     <p>
                                         <span>Artist(s): </span>
-                                        <b>{toon.artists.map((e: any) => {return e.name}).join(', ')}</b>
+                                        {
+                                            toon.artists.map((e: any, i: number) => {
+                                                return <>
+                                                    <b><Link to={`/directory?artist=${encodeURIComponent(e.name)}`}>{e.name}</Link></b>
+                                                    {i < toon.artists.length - 1 ? ', ' : ''}
+                                                </>
+                                            })
+                                        }
                                     </p>
                                     <p>
                                         <span>Genres: </span>
-                                        <b>{toon.genres.map((e: any) => {return e.name}).join(', ')}</b>
+                                        {
+                                            toon.genres.map((e: any, i: number) => {
+                                                return <>
+                                                    <b><Link to={`/directory?genre=${encodeURIComponent(e.name)}`}>{e.name}</Link></b>
+                                                    {i < toon.genres.length - 1 ? ', ' : ''}
+                                                </>
+                                            })
+                                        }
                                     </p>
                                     <p>
                                         <span>Tags: </span>
-                                        <b>{toon.tags.map((e: any) => {return e.name}).join(', ')}</b>
+                                        {
+                                            toon.tags.map((e: any, i: number) => {
+                                                return <>
+                                                    <b><Link to={`/directory?tag=${encodeURIComponent(e.name)}`}>{e.name}</Link></b>
+                                                    {i < toon.tags.length - 1 ? ', ' : ''}
+                                                </>
+                                            })
+                                        }
                                     </p>
                                     <p>
                                         <span>Alt title: </span>
@@ -88,7 +116,7 @@ export const Toon = () => {
                                     </p>
                                     <p>
                                         <span>Status: </span>
-                                        <b>{toon.status}</b>
+                                        <b><Link to={`/directory?status=${toon.status}`}>{toon.status}</Link></b>
                                     </p>
                                 </div>
                                 </>
