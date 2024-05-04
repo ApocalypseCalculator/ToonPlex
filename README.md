@@ -41,7 +41,7 @@ Ideally some things you should have:
 
 Simply clone this repository and install dependencies under each codebase using `npm install`.
 Build the client by running `npx vite build` in the `client` folder, and initialize 
-the database by running `npx prisma db push` in the `server` folder. 
+the database by running `npx prisma migrate deploy` and `npx prisma generate` in the `server` folder. 
 
 The server and scraper are both started by using `node .` in their folders. 
 
