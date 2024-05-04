@@ -1,4 +1,4 @@
-const { PrismaClient, UploadStatus } = require('@prisma/client');
+const { PrismaClient, UploadStatus, Status } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 module.exports.name = "/api/toon/list";
@@ -17,6 +17,7 @@ author: string (author name to filter by)
 artist: string (artist name to filter by)
 genre: string (genre name to filter by)
 tag: string (tag name to filter by)
+status: enum(string) (status to filter by)
 
 support will be added for multiple authors, artists, genres, and tags later
 
@@ -63,6 +64,9 @@ module.exports.execute = function (req, res) {
                     }
                 }
             }
+        }),
+        ...((req.query.status && typeof req.query.status === "string" && Status[req.query.status.toUpperCase()]) && {
+            status: Status[req.query.status.toUpperCase()]
         })
     };
     Promise.all([
