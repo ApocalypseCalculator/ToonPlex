@@ -11,10 +11,10 @@ export const Reader = () => {
     const { toonslug, chapter } = useParams();
 
     React.useEffect(() => {
-        if (toonslug !== "" && chapter !== "") {
+        if (toonslug !== "" && chapter !== "" && session.data.ready) {
             axios.get(`/api/chapter/get/${toonslug}/${chapter}`, {
                 headers: {
-                    Authorization: session.token
+                    Authorization: session.data.token
                 }
             }).then(res => {
                 if (res.data.status == 200 && res.data.chapter) {
@@ -23,7 +23,7 @@ export const Reader = () => {
                 }
             });
         }
-    }, [session.token, toonslug, chapter]);
+    }, [session.data, toonslug, chapter]);
 
     return (
         <>

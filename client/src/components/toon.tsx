@@ -10,10 +10,10 @@ export const Toon = () => {
     const { toonslug } = useParams();
 
     React.useEffect(() => {
-        if (toonslug !== "") {
+        if (toonslug !== "" && session.data.ready) {
             axios.get(`/api/toon/get/${toonslug}`, {
                 headers: {
-                    Authorization: session.token
+                    Authorization: session.data.token
                 }
             }).then(res => {
                 if (res.data.status == 200 && res.data.toon) {
@@ -22,7 +22,7 @@ export const Toon = () => {
                 }
             });
         }
-    }, [session.token, toonslug]);
+    }, [session.data, toonslug]);
 
     return (
         <>
