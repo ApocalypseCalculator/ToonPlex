@@ -10,6 +10,10 @@ export const Directory = () => {
     const [toons, setToons] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [pagination, setPagination] = React.useState({
+        curpage: 1,
+        totalpages: 1
+    });
 
     React.useEffect(() => {
         if (session.data.ready) {
@@ -27,6 +31,10 @@ export const Directory = () => {
             }).then(res => {
                 if (res.data.status == 200) {
                     setToons(res.data.toons);
+                    setPagination({
+                        curpage: parseInt(res.data.page),
+                        totalpages: Math.ceil(parseInt(res.data.total) / parseInt(res.data.pagesize))
+                    });
                 }
                 setLoading(false);
             });
@@ -77,8 +85,36 @@ export const Directory = () => {
                                     })
                         }
                     </div>
-                    <div className='row toondir-pagination'>
-                        <ul className='pagination'></ul>
+                    <div className='toondir-pagination'>
+                        <ul className='pagination justify-content-center'>
+                            <li className={`page-item${pagination.curpage == 1 ? ' disabled' : ''}`}>
+                                {
+                                    pagination.curpage == 1 ? 
+                                    <span className="page-link">{`<<`}</span> : <a className="page-link">{`<<`}</a>
+                                }
+                            </li>
+                            {
+                                Array.from(Array(pagination.totalpages).keys()).map((i) => {
+                                    return <li className={`page-item${pagination.curpage == i + 1 ? ' active' : ''}`}>
+                                        {
+                                            pagination.curpage == i + 1 ? 
+                                            <span className="page-link">{i + 1}</span> : <a className="page-link" onClick={() => {
+                                                updateSearchParams((oldparams: URLSearchParams) => {
+                                                    oldparams.set('page', (i + 1).toString());
+                                                    return oldparams;
+                                                });
+                                            }}>{i + 1}</a>
+                                        }
+                                    </li>
+                                })
+                            }
+                            <li className={`page-item${pagination.curpage == pagination.totalpages ? ' disabled' : ''}`}>
+                                {
+                                    pagination.curpage == pagination.totalpages ? 
+                                    <span className="page-link">{`>>`}</span> : <a className="page-link">{`>>`}</a>
+                                }
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </section>
