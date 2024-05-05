@@ -219,9 +219,6 @@ async function downloadChapter(url, browser, toondir) {
             })
         }
     });
-    page.on('request', (req) => {
-        req.continue();
-    });
 
     await page.goto(url, { waitUntil: "networkidle0" });
     await sleep(2000);
