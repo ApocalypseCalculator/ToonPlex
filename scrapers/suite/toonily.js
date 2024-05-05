@@ -2,6 +2,8 @@ const puppeteer = require('puppeteer-extra').default;
 const fs = require('fs');
 const axios = require('axios').default;
 
+const EXTREGEX = /\.(png|jpg|jpeg|webp|PNG|JPG|JPEG|WEBP|tiff|TIFF)$/;
+
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
 puppeteer.use(StealthPlugin());
@@ -185,6 +187,15 @@ async function scrape(url) {
 async function downloadChapter(url, browser, toondir) {
     const page = await browser.newPage();
     await page.setRequestInterception(true);
+    // block the ad stuff
+    page.on("request", req => {
+        if (isBlocked(req.url())) {
+            req.abort();
+        }
+        else {
+            req.continue();
+        }
+    });
     let chapterdir = `${toondir}/${getLastSection(url)}`;
     if (!fs.existsSync(chapterdir)) {
         process.send({
@@ -198,7 +209,7 @@ async function downloadChapter(url, browser, toondir) {
     page.on('response', (res) => {
         let name = getLastSection(res.url());
         // match image downloads only
-        if (/\.(png|jpg|jpeg|webp|PNG|JPG|JPEG|WEBP|tiff|TIFF)$/.test(name) && res.url().includes("cdn.toonily.com/chapters/")) {
+        if (EXTREGEX.test(name) && res.url().includes("cdn.toonily.com/chapters/")) {
             // save buffered image to disk
             res.buffer().then(buf => {
                 fs.writeFileSync(`${chapterdir}/${name}`, buf);
@@ -226,7 +237,7 @@ async function downloadChapter(url, browser, toondir) {
     });
 
     orderedpagesrc = orderedpagesrc.filter((src) =>
-        /\.(png|jpg|webp)$/.test(getLastSection(src)) && src.includes("cdn.toonily.com/chapters/") && list.includes(getLastSection(src))
+        EXTREGEX.test(getLastSection(src)) && src.includes("cdn.toonily.com/chapters/") && list.includes(getLastSection(src))
     );
 
     orderedpagesrc = orderedpagesrc.map((src) => { return getLastSection(src) });
