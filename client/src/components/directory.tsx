@@ -90,7 +90,12 @@ export const Directory = () => {
                             <li className={`page-item${pagination.curpage == 1 ? ' disabled' : ''}`}>
                                 {
                                     pagination.curpage == 1 ?
-                                        <span className="page-link">{`<<`}</span> : <a className="page-link">{`<<`}</a>
+                                        <span className="page-link">{`<<`}</span> : <a className="page-link" onClick={() => {
+                                            updateSearchParams((oldparams: URLSearchParams) => {
+                                                oldparams.set('page', '1');
+                                                return oldparams;
+                                            });
+                                        }}>{`<<`}</a>
                                 }
                             </li>
                             {
@@ -106,8 +111,12 @@ export const Directory = () => {
                                             <span className="page-link">...</span>
                                         </li>
                                     }
-                                    else if (i < pagination.curpage - 2 || i > pagination.curpage + 2) {
-                                        // hide these if we have ellipsis already
+                                    else if (i < pagination.curpage - 2 && pagination.curpage > 3) {
+                                        // hide these if we have preceding ellipsis already
+                                        return <></>
+                                    }
+                                    else if (i > pagination.curpage + 2 && pagination.curpage < pagination.totalpages - 2) {
+                                        // hide these if we have trailing ellipsis already
                                         return <></>
                                     }
                                     else {
@@ -128,7 +137,12 @@ export const Directory = () => {
                             <li className={`page-item${pagination.curpage == pagination.totalpages ? ' disabled' : ''}`}>
                                 {
                                     pagination.curpage == pagination.totalpages ?
-                                        <span className="page-link">{`>>`}</span> : <a className="page-link">{`>>`}</a>
+                                        <span className="page-link">{`>>`}</span> : <a className="page-link" onClick={() => {
+                                            updateSearchParams((oldparams: URLSearchParams) => {
+                                                oldparams.set('page', (pagination.totalpages).toString());
+                                                return oldparams;
+                                            });
+                                        }}>{`>>`}</a>
                                 }
                             </li>
                         </ul>
