@@ -3,7 +3,7 @@ import { default as axios } from 'axios';
 import { SessionContext } from "../util/session";
 import { Link, useSearchParams } from 'react-router-dom';
 
-const VALIDPARAMS = ['page', 'author', 'artist', 'genre', 'tag', 'status'];
+const VALIDPARAMS = ['page', 'author', 'artist', 'genre', 'tag', 'status', 'amount'];
 
 export const Directory = () => {
     const session = React.useContext(SessionContext);
@@ -89,29 +89,46 @@ export const Directory = () => {
                         <ul className='pagination justify-content-center'>
                             <li className={`page-item${pagination.curpage == 1 ? ' disabled' : ''}`}>
                                 {
-                                    pagination.curpage == 1 ? 
-                                    <span className="page-link">{`<<`}</span> : <a className="page-link">{`<<`}</a>
+                                    pagination.curpage == 1 ?
+                                        <span className="page-link">{`<<`}</span> : <a className="page-link">{`<<`}</a>
                                 }
                             </li>
                             {
                                 Array.from(Array(pagination.totalpages).keys()).map((i) => {
-                                    return <li className={`page-item${pagination.curpage == i + 1 ? ' active' : ''}`}>
-                                        {
-                                            pagination.curpage == i + 1 ? 
-                                            <span className="page-link">{i + 1}</span> : <a className="page-link" onClick={() => {
-                                                updateSearchParams((oldparams: URLSearchParams) => {
-                                                    oldparams.set('page', (i + 1).toString());
-                                                    return oldparams;
-                                                });
-                                            }}>{i + 1}</a>
-                                        }
-                                    </li>
+                                    if (i == 0 && pagination.curpage > 3) {
+                                        // show ellipsis at first page if we're more than 3 pages in
+                                        return <li className={`page-item disabled`}>
+                                            <span className="page-link">...</span>
+                                        </li>
+                                    }
+                                    else if (i == pagination.totalpages - 1 && pagination.curpage < pagination.totalpages - 2) {
+                                        return <li className={`page-item disabled`}>
+                                            <span className="page-link">...</span>
+                                        </li>
+                                    }
+                                    else if (i < pagination.curpage - 2 || i > pagination.curpage + 2) {
+                                        // hide these if we have ellipsis already
+                                        return <></>
+                                    }
+                                    else {
+                                        return <li className={`page-item${pagination.curpage == i + 1 ? ' active' : ''}`}>
+                                            {
+                                                pagination.curpage == i + 1 ?
+                                                    <span className="page-link">{i + 1}</span> : <a className="page-link" onClick={() => {
+                                                        updateSearchParams((oldparams: URLSearchParams) => {
+                                                            oldparams.set('page', (i + 1).toString());
+                                                            return oldparams;
+                                                        });
+                                                    }}>{i + 1}</a>
+                                            }
+                                        </li>
+                                    }
                                 })
                             }
                             <li className={`page-item${pagination.curpage == pagination.totalpages ? ' disabled' : ''}`}>
                                 {
-                                    pagination.curpage == pagination.totalpages ? 
-                                    <span className="page-link">{`>>`}</span> : <a className="page-link">{`>>`}</a>
+                                    pagination.curpage == pagination.totalpages ?
+                                        <span className="page-link">{`>>`}</span> : <a className="page-link">{`>>`}</a>
                                 }
                             </li>
                         </ul>
