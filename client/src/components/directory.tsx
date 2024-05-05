@@ -56,7 +56,11 @@ export const Directory = () => {
                                         return <div className='col-6 col-sm-3 col-lg-2'>
                                             <div className='webtoon-gridview'>
                                                 <Link to={`/toon/${toon.slug}`} className='webtoon-gridimg'>
-                                                    <img className='gridimg-preview' src={`/api/image/get/${toon.cover.transport}`}></img>
+                                                    <img className='gridimg-preview' src={toon.cover.transport ?
+                                                        `/api/image/get/${toon.cover.transport}` :
+                                                        // we piggyback off of wikipedia's placeholder image
+                                                        'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'
+                                                    }></img>
                                                 </Link>
                                                 <div className='d-flex justify-content-between'>
                                                     <p className='text'>
@@ -72,6 +76,9 @@ export const Directory = () => {
                                         </div>
                                     })
                         }
+                    </div>
+                    <div className='row toondir-pagination'>
+                        <ul className='pagination'></ul>
                     </div>
                 </div>
             </section>
@@ -94,7 +101,7 @@ function SearchParamBadges(props: any) {
                             return <span className="badge badge-pill badge-primary searchqueryparam dirparampill">
                                 {param}: {props.searchParams.get(param)} &nbsp;
                                 <button type="button" className="close searchqueryparam" onClick={() => {
-                                    props.setSearchParams((oldparams : URLSearchParams) => {
+                                    props.setSearchParams((oldparams: URLSearchParams) => {
                                         oldparams.delete(param);
                                         return oldparams;
                                     });
