@@ -24,7 +24,7 @@ authors, artists, genres, tags, etc.
 
 module.exports.execute = function (req, res) {
     let amount = parseInt(req.query.amount) || DEFAULT_PAGE_SIZE;
-    let offset = (parseInt(req.query.page) || 0) * amount;
+    let offset = ((parseInt(req.query.page) || 1) - 1) * amount;
     if(req.query.query && req.query.query !== "" && typeof req.query.query === "string") {
         prisma.$queryRaw`
         SELECT searchres.id, title, slug, published, searchres."status", "Image".transport, full_count FROM 
