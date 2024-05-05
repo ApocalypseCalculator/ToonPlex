@@ -7,7 +7,7 @@ export interface SessionData {
 }
 export interface Session {
     data: SessionData,
-    updateToken: (token: string) => void
+    updateData: (data: {username: string, token: string}) => void
 }
 
 export const SessionContext = React.createContext<Session>({} as any);
@@ -18,18 +18,24 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         token: "",
         ready: false
     } as SessionData);
-    function updateToken(token: string) {
+    function updateData(data: { username: string, token: string}) {
         setData({
-            username: "",
-            token: token,
+            username: data.username,
+            token: data.token,
             ready: true
         });
-        localStorage.setItem("token", token);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", data.username);
     }
     React.useEffect(() => {
         let storagetoken = localStorage.getItem("token");
-        if (storagetoken && storagetoken !== "") {
-            updateToken(storagetoken);
+        let storageuser = localStorage.getItem("user");
+        if (storagetoken && storagetoken !== "" && storageuser && storageuser !== "") {
+            setData({
+                username: storageuser,
+                token: storagetoken,
+                ready: true
+            });
         }
         else {
             setData({
@@ -40,7 +46,7 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         }
     }, []);
     return (
-        <SessionContext.Provider value={{ data, updateToken}}>
+        <SessionContext.Provider value={{ data, updateData}}>
             {props.children}
         </SessionContext.Provider>
     )

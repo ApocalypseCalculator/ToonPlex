@@ -27,12 +27,15 @@ export const NavBar = () => {
                             {
                                 session.data.token !== "" ? <>
                                     <a className={"nav-link dropdown-toggle"} href={"#"} data-toggle={"dropdown"}>
-                                        Signed in
+                                        Signed in as {session.data.username}
                                     </a>
                                     <div className={"dropdown-menu dropdown-menu-right"}>
                                         <a className={"dropdown-item"} href={"#"} onClick={(ev) => {
                                             ev.preventDefault();
-                                            session.updateToken("");
+                                            session.updateData({
+                                                token: "",
+                                                username: ""
+                                            });
                                             // window.location.reload();
                                         }}>Logout</a>
                                     </div>

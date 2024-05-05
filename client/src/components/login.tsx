@@ -33,7 +33,10 @@ export const Login = () => {
             password: pwd
         }).then((res) => {
             if (res.data.token) {
-                session.updateToken(res.data.token);
+                session.updateData({
+                    username: res.data.username,
+                    token: res.data.token
+                });
                 nav("/");
             }
             else {
