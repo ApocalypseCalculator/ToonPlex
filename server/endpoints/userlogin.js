@@ -44,7 +44,7 @@ module.exports.execute = function (req, res) {
                                 registertime: user.registertime,
                                 permissions: user.permissions
                             }, process.env.JWTSECRET);
-                            res.json({ token: token });
+                            res.json({ token: token, username: user.username });
                         }
                     }
                 });
