@@ -198,7 +198,7 @@ async function downloadChapter(url, browser, toondir) {
     page.on('response', (res) => {
         let name = getLastSection(res.url());
         // match image downloads only
-        if (/\.(png|jpg|webp)$/.test(name) && res.url().includes("cdn.toonily.com/chapters/")) {
+        if (/\.(png|jpg|jpeg|webp|PNG|JPG|JPEG|WEBP|tiff|TIFF)$/.test(name) && res.url().includes("cdn.toonily.com/chapters/")) {
             // save buffered image to disk
             res.buffer().then(buf => {
                 fs.writeFileSync(`${chapterdir}/${name}`, buf);
