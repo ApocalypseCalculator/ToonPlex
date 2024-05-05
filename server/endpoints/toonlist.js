@@ -26,7 +26,8 @@ results are ordered by id in descending order, i.e. newest to oldest
 
 module.exports.execute = function (req, res) {
     let amount = parseInt(req.query.amount) || DEFAULT_PAGE_SIZE;
-    let offset = ((parseInt(req.query.page) || 1) - 1) * amount;
+    let page = (parseInt(req.query.page) || 1);
+    let offset = (page - 1) * amount;
     let queryfilter = {
         ...((!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin)) && { published: true }),
         ...(req.query.author && {
@@ -101,6 +102,6 @@ module.exports.execute = function (req, res) {
             }
         })
     ]).then(([count, toons]) => {
-        res.json({ status: 200, offset: offset, pagesize: amount, total: count, toons: toons });
+        res.json({ status: 200, page: page, pagesize: amount, total: count, toons: toons });
     });
 }
