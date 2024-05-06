@@ -138,7 +138,7 @@ export const Toon = () => {
                                         toon.chapters.reverse().map((chapter: any) => {
                                             return <><h5>
                                                 <Link to={`/reader/${toonslug}/${chapter.order}`}>
-                                                    Chapter {chapter.order}
+                                                    {chapter.name ?? `Chapter ${chapter.order}`}
                                                 </Link>
                                                 <span>{new Date(chapter.date).toDateString()}</span>
                                             </h5><hr /></>
