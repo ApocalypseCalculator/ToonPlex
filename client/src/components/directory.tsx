@@ -20,7 +20,7 @@ export const Directory = () => {
             let queries = [] as string[];
             searchParams.forEach((value, key) => {
                 if (VALIDPARAMS.includes(key)) {
-                    queries.push(`${key}=${value}`);
+                    queries.push(`${key}=${encodeURIComponent(value)}`);
                 }
             });
             let append = queries.length > 0 ? `?${queries.join("&")}` : "";
