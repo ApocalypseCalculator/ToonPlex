@@ -17,8 +17,8 @@ module.exports.execute = function (req, res) {
         }).then((image) => {
             if(image) {
                 res.sendFile(image.path, 
-                    { root: './content', immutable: true, maxAge: 31556926 });
-                // a very long cache time
+                    { root: './content', immutable: true, maxAge: 31556926 * 1000 });
+                // a very long cache time (apparently express uses millis here)
                 // if the image is updated, a new transport id is assigned
                 // to cache bust, the client must request the image with the new transport id
             }
