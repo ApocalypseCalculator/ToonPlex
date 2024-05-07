@@ -18,6 +18,8 @@ artist: string (artist name to filter by)
 genre: string (genre name to filter by)
 tag: string (tag name to filter by)
 status: enum(string) (status to filter by)
+orderby: id (default) | title
+order: asc | desc (default)
 
 support will be added for multiple authors, artists, genres, and tags later
 
@@ -28,6 +30,10 @@ module.exports.execute = function (req, res) {
     let amount = parseInt(req.query.amount) || DEFAULT_PAGE_SIZE;
     let page = (parseInt(req.query.page) || 1);
     let offset = (page - 1) * amount;
+    let order = ['asc', 'desc'].includes(req.query.order) ? req.query.order : 'desc';
+    let orderby = ['id', 'title'].includes(req.query.orderby) ? req.query.orderby : 'id';
+    let queryorder = {};
+    queryorder[orderby] = order;
     let queryfilter = {
         ...((!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin)) && { published: true }),
         ...(req.query.author && {
@@ -97,9 +103,7 @@ module.exports.execute = function (req, res) {
             },
             take: amount,
             skip: offset,
-            orderBy: {
-                id: 'desc'
-            }
+            orderBy: queryorder
         })
     ]).then(([count, toons]) => {
         res.json({ status: 200, page: page, pagesize: amount, total: count, toons: toons });
