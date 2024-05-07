@@ -12,7 +12,7 @@ module.exports.execute = function (req, res) {
         prisma.toon.findUnique({
             where: {
                 slug: req.params.toonslug,
-                ...(!req.auth && {published: true}) // if not authorized, only published toons are viewable
+                ...(!req.auth && { published: true }) // if not authorized, only published toons are viewable
             },
             include: {
                 authors: true,
@@ -27,7 +27,12 @@ module.exports.execute = function (req, res) {
                 }
             }
         }).then((toon) => {
-            res.status(200).json({ status: 200, toon: toon });
+            if (toon) {
+                res.status(200).json({ status: 200, toon: toon });
+            }
+            else {
+                res.status(404).json({ status: 404, error: `Toon not found` });
+            }
         })
     }
     else {
