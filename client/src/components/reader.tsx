@@ -80,18 +80,23 @@ function PageImage(props: any) {
 function PaginationSelector(props: any) {
     // paginator offers next/prev buttons as available
     // button clicks also triggers scroll to top
+    function scrollToTop() {
+        setTimeout(() => {
+            window.scrollTo({ top: -1, left: 0, behavior: 'smooth' });
+        }, 10);
+    }
     return <div className='pagination-selector'>
         {
             props.chapterdet.order > 1
             &&
             <Link to={`/reader/${props.toonslug}/${props.chapterdet.order - 1}`} className={`prev-chapter btn btn-primary${props.chapterdet.toon._count.chapters > props.chapterdet.order ? ' mr-3' : ''}`} 
-                onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}>Previous Chapter</Link>
+                onClick={scrollToTop}>Previous Chapter</Link>
         }
         {
             props.chapterdet.toon._count.chapters > props.chapterdet.order
             &&
             <Link to={`/reader/${props.toonslug}/${props.chapterdet.order + 1}`} className='next-chapter btn btn-primary' 
-                onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}>Next Chapter</Link>
+                onClick={scrollToTop}>Next Chapter</Link>
         }
     </div>
 }
