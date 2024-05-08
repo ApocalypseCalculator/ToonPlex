@@ -17,8 +17,28 @@ export const Toon = () => {
                 }
             }).then(res => {
                 if (res.data.status == 200 && res.data.toon) {
-                    setToon(res.data.toon);
-                    setLoading(false);
+                    if (session.data.token) {
+                        axios.get(`/api/user/history/toon/${toonslug}`, {
+                            headers: {
+                                Authorization: session.data.token
+                            }
+                        }).then(res2 => {
+                            if (res2.data.status == 200) {
+                                for (let i = 0; i < res.data.toon.chapters.length; i++) {
+                                    let read = res2.data.history.find((e: any) => e.chapterid == res.data.toon.chapters[i].id);
+                                    if (read) {
+                                        res.data.toon.chapters[i].read = true;
+                                    }
+                                }
+                                setToon(res.data.toon);
+                                setLoading(false);
+                            }
+                        });
+                    }
+                    else {
+                        setToon(res.data.toon);
+                        setLoading(false);
+                    }
                 }
             });
         }
@@ -140,7 +160,10 @@ export const Toon = () => {
                                                 <Link to={`/reader/${toonslug}/${chapter.order}`}>
                                                     {chapter.name ?? `Chapter ${chapter.order}`}
                                                 </Link>
-                                                <span>{new Date(chapter.date).toDateString()}</span>
+                                                {
+                                                    chapter.read ? <>&nbsp; <span className='badge badge-pill badge-info'>Read</span></> : <></>
+                                                }
+                                                <span className='releasedate'>{new Date(chapter.date).toDateString()}</span>
                                             </h5><hr /></>
                                         })
                                     }
