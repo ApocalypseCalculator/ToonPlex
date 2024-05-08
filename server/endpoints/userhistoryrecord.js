@@ -8,7 +8,7 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    let todelete = !!req.query.delete;
+    let todelete = !!req.body.delete;
     if (req.params.toonslug && req.params.chapterorder && !isNaN(parseInt(req.params.chapterorder))) {
         prisma.chapter.findFirst({
             where: {
