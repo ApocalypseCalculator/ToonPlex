@@ -14,7 +14,7 @@ module.exports.execute = function (req, res) {
     (SELECT DISTINCT ON ("Chapter".toonid) "ReadHistory".date, "Chapter".id as chapterid, "Chapter".order, "Chapter".toonid  
     FROM "ReadHistory" 
     INNER JOIN "Chapter" ON "ReadHistory".chapterid = "Chapter".id 
-    WHERE userid=${req.auth.userid} 
+    WHERE userid=${req.auth.id} 
     ORDER BY "Chapter".toonid ASC, "Chapter".order DESC) 
     INNER JOIN "Toon" ON toonid = "Toon".id;`.then((history) => {
         res.json(history);
