@@ -21,7 +21,11 @@ export const Reader = () => {
                     setChapterdet(res.data.chapter);
                     setLoading(false);
                     if(session.data.token) {
-                        axios.post(`/api/user/history/record/${toonslug}/${chapter}`);
+                        axios.post(`/api/user/history/record/${toonslug}/${chapter}`, {}, {
+                            headers: {
+                                Authorization: session.data.token
+                            }
+                        });
                     }
                 }
             });
