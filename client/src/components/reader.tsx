@@ -20,6 +20,9 @@ export const Reader = () => {
                 if (res.data.status == 200 && res.data.chapter) {
                     setChapterdet(res.data.chapter);
                     setLoading(false);
+                    if(session.data.token) {
+                        axios.post(`/api/user/history/record/${toonslug}/${chapter}`);
+                    }
                 }
             });
         }
