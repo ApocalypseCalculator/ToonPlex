@@ -81,6 +81,12 @@ export const Toon = () => {
                                                                 <Link to={`/reader/${toonslug}/${toon.chapters.length}`} className='anime-btn btn btn-primary'>
                                                                     Read Last
                                                                 </Link>
+                                                                {
+                                                                    toon.chapters.find((e: any) => !e.read) ?
+                                                                        <Link to={`/reader/${toonslug}/${toon.chapters.find((e: any) => !e.read).order}`} className='anime-btn btn btn-primary ml-3'>
+                                                                            Continue Reading
+                                                                        </Link> : <></>
+                                                                }
                                                             </div> : <></>
                                                     }
                                                 </div>
