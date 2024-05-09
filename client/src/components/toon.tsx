@@ -161,7 +161,7 @@ export const Toon = () => {
                             <div className='row chapterlist'>
                                 <div className='col-md-12 overflow-auto'>
                                     {
-                                        toon.chapters.reverse().map((chapter: any) => {
+                                        toon.chapters.toReversed().map((chapter: any) => {
                                             return <><h5>
                                                 <Link to={`/reader/${toonslug}/${chapter.order}`}>
                                                     {chapter.name ?? `Chapter ${chapter.order}`}
