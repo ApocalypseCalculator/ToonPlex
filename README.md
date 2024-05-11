@@ -52,6 +52,7 @@ Server requires:
 DB_URL: the URL to the Postgres database
 JWTSECRET: the secret for JWT verification
 PORT: the port to run the server on
+NODE_ENV: production (optional)
 ```
 Scraper requires: 
 ```
