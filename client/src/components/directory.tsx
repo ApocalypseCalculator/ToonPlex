@@ -3,7 +3,8 @@ import { default as axios } from 'axios';
 import { SessionContext } from "../util/session";
 import { Link, useSearchParams } from 'react-router-dom';
 
-const VALIDPARAMS = ['page', 'author', 'artist', 'genre', 'tag', 'status', 'amount'];
+const VALIDPARAMS = ['page', 'author', 'artist', 'genre', 'tag', 'status'];
+const AMOUNT_PER_SECTION = 18;
 
 export const Directory = () => {
     const session = React.useContext(SessionContext);
@@ -17,14 +18,13 @@ export const Directory = () => {
 
     React.useEffect(() => {
         if (session.data.ready) {
-            let queries = [] as string[];
+            let queries = [`amount=${AMOUNT_PER_SECTION}`];
             searchParams.forEach((value, key) => {
                 if (VALIDPARAMS.includes(key)) {
                     queries.push(`${key}=${encodeURIComponent(value)}`);
                 }
             });
-            let append = queries.length > 0 ? `?${queries.join("&")}` : "";
-            axios.get(`/api/toon/list${append}`, {
+            axios.get(`/api/toon/list?${queries.join("&")}`, {
                 headers: {
                     Authorization: session.data.token
                 }
