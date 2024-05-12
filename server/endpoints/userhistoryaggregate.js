@@ -17,7 +17,7 @@ module.exports.execute = function (req, res) {
     WHERE userid=${req.auth.id} 
     ORDER BY "Chapter".toonid ASC, "Chapter".order DESC) 
     INNER JOIN "Toon" ON toonid = "Toon".id;`.then((history) => {
-        res.json(history);
+        res.json({ status: 200, history: history });
     }).catch(err => {
         res.status(500).json({ error: `Internal server error` });
     })
