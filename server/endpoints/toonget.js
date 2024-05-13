@@ -19,7 +19,11 @@ module.exports.execute = function (req, res) {
                 artists: true,
                 genres: true,
                 tags: true,
-                chapters: true,
+                chapters: {
+                    orderBy: {
+                        order: 'desc'
+                    }
+                },
                 cover: {
                     select: {
                         transport: true
