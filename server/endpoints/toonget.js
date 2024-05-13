@@ -21,7 +21,7 @@ module.exports.execute = function (req, res) {
                 tags: true,
                 chapters: {
                     orderBy: {
-                        order: 'desc'
+                        order: 'asc'
                     }
                 },
                 cover: {
