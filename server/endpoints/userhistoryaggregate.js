@@ -20,7 +20,7 @@ module.exports.execute = function (req, res) {
     FROM "ReadHistory" 
     INNER JOIN "Chapter" ON "ReadHistory".chapterid = "Chapter".id 
     WHERE userid=${req.auth.id} 
-    ORDER BY "Chapter".toonid ASC, "Chapter".order DESC) 
+    ORDER BY "Chapter".toonid ASC, "Chapter".order DESC) AS weird_pg_moment 
     INNER JOIN "Toon" ON toonid = "Toon".id 
     LEFT JOIN "Image" ON "Toon".coverid = "Image".id 
     ORDER BY "date" DESC 
