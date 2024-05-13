@@ -3,7 +3,7 @@ import { default as axios } from 'axios';
 import { SessionContext } from "../util/session";
 import { Link } from 'react-router-dom';
 
-const AMOUNT_PER_SECTION = 6;
+const AMOUNT_PER_SECTION = 4;
 
 export const Home = () => {
     const session = React.useContext(SessionContext);
@@ -18,7 +18,7 @@ export const Home = () => {
                         Authorization: session.data.token
                     }
                 }),
-                axios.get(`/api/user/history/aggregate`, {
+                axios.get(`/api/user/history/aggregate?amount=${AMOUNT_PER_SECTION}`, {
                     headers: {
                         Authorization: session.data.token
                     }
