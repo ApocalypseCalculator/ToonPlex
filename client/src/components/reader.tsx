@@ -56,7 +56,7 @@ export const Reader = () => {
                                     <div className='reading-content'>
                                         {
                                             chapterdet.pages.map((page: any, i: number) => {
-                                                return <PageImage key={`page-${i + 1}`} url={page.image.transport} />
+                                                return <PageImage key={`page-${chapterdet.order}-${i + 1}`} url={page.image.transport} />
                                             })
                                         }
                                     </div></>
