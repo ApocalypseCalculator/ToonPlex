@@ -15,8 +15,8 @@ module.exports.execute = function (req, res) {
     let offset = (page - 1) * amount;
     // This raw SQL query (targetted specifically for Postgres)
     // retrieves the highest ordered chapter for each toon that the user has read
-    prisma.$queryRaw`SELECT date, chapterid, "order", "Toon".id as toonid, "Toon".slug as toonslug, "Toon".title as toontitle, "Image".transport FROM 
-    (SELECT DISTINCT ON ("Chapter".toonid) "ReadHistory".date, "Chapter".id as chapterid, "Chapter".order, "Chapter".toonid  
+    prisma.$queryRaw`SELECT date, chapterid, "order", name, "Toon".id as toonid, "Toon".slug as toonslug, "Toon".title as toontitle, "Image".transport FROM 
+    (SELECT DISTINCT ON ("Chapter".toonid) "ReadHistory".date, "Chapter".id as chapterid, "Chapter".order, "Chapter".toonid, "Chapter".name 
     FROM "ReadHistory" 
     INNER JOIN "Chapter" ON "ReadHistory".chapterid = "Chapter".id 
     WHERE userid=${req.auth.id} 
