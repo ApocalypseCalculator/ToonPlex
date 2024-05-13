@@ -14,6 +14,7 @@ model User {
     registertime DateTime      @default(now())
     permissions  Permissions?
     readhistory  ReadHistory[]
+    favourite    Favourite[]
 }
 
 model Permissions {
@@ -34,6 +35,17 @@ model ReadHistory {
     chapterid Int
     chapter   Chapter  @relation(fields: [chapterid], references: [id])
     date      DateTime @default(now())
+}
+
+// existence of a Favourite record indicates user favourited the given toon
+model Favourite {
+    userid Int
+    user   User     @relation(fields: [userid], references: [id])
+    toonid Int
+    toon   Toon     @relation(fields: [toonid], references: [id])
+    date   DateTime @default(now())
+
+    @@id([userid, toonid])
 }
 
 model Author {
@@ -61,20 +73,21 @@ model Tag {
 }
 
 model Toon {
-    id        Int       @id @default(autoincrement())
-    slug      String    @unique
+    id        Int         @id @default(autoincrement())
+    slug      String      @unique
     title     String
     alttitle  String?
     authors   Author[]
     artists   Artist[]
     genres    Genre[]
     tags      Tag[]
-    status    Status    @default(ONGOING)
+    status    Status      @default(ONGOING)
     summary   String
-    published Boolean   @default(false)
+    published Boolean     @default(false)
     chapters  Chapter[]
-    cover     Image?    @relation(fields: [coverid], references: [id])
+    cover     Image?      @relation(fields: [coverid], references: [id])
     coverid   Int?
+    favourite Favourite[]
 }
 
 model Chapter {
