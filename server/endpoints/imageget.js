@@ -23,11 +23,11 @@ module.exports.execute = function (req, res) {
                 // to cache bust, the client must request the image with the new transport id
             }
             else {
-                res.status(404).json({ error: `Image not found` });
+                res.status(404).json({ status: 404, error: `Image not found` });
             }
         });
     }
     else {
-        res.status(400).json({ error: `Invalid form` });
+        res.status(400).json({ status: 400, error: `Invalid form` });
     }
 }

@@ -26,16 +26,16 @@ module.exports.execute = function (req, res) {
             }
         }).then((user) => {
             if (!user) {
-                res.status(401).json({ error: "Incorrect password or username" });
+                res.status(401).json({ status: 401, error: "Incorrect password or username" });
             }
             else {
                 bcrypt.compare(req.body.password, user.password, function (err, result) {
                     if (err) {
-                        res.status(500).json({ error: `Server error` })
+                        res.status(500).json({ status: 500, error: `Server error` })
                     }
                     else {
                         if (!result) {
-                            res.status(401).json({ error: "Incorrect password or username" });
+                            res.status(401).json({ status: 401, error: "Incorrect password or username" });
                         }
                         else {
                             let token = jwt.sign({
@@ -44,7 +44,7 @@ module.exports.execute = function (req, res) {
                                 registertime: user.registertime,
                                 permissions: user.permissions
                             }, process.env.JWTSECRET);
-                            res.json({ token: token, username: user.username });
+                            res.json({ status: 200, token: token, username: user.username });
                         }
                     }
                 });
@@ -52,6 +52,6 @@ module.exports.execute = function (req, res) {
         })
     }
     else {
-        res.status(400).json({ error: `Invalid form` });
+        res.status(400).json({ status: 400, error: `Invalid form` });
     }
 }

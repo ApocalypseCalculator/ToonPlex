@@ -56,6 +56,6 @@ module.exports.execute = function (req, res) {
                 });
             });
     } else {
-        res.status(400).json({ error: `Invalid form` });
+        res.status(400).json({ status: 400, error: `Invalid form` });
     }
 }
