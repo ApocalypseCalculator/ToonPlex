@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { default as axios } from 'axios';
 
 export interface SessionData {
     username: string,
@@ -7,7 +8,8 @@ export interface SessionData {
 }
 export interface Session {
     data: SessionData,
-    updateData: (data: {username: string, token: string}) => void
+    favourites: any[],
+    updateData: (data: { username: string, token: string }) => void
 }
 
 export const SessionContext = React.createContext<Session>({} as any);
@@ -18,7 +20,7 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         token: "",
         ready: false
     } as SessionData);
-    function updateData(data: { username: string, token: string}) {
+    function updateData(data: { username: string, token: string }) {
         setData({
             username: data.username,
             token: data.token,
@@ -45,8 +47,23 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
             });
         }
     }, []);
+
+    const [favourites, setFavourites] = React.useState([] as any[]);
+    React.useEffect(() => {
+        // fetch favourites
+        if (data.ready && data.token !== "") {
+            axios.get("/api/user/favourite/get", {
+                headers: {
+                    Authorization: data.token
+                }
+            }).then((response) => {
+                setFavourites(response.data.favourites);
+            });
+        }
+    }, [data]);
+
     return (
-        <SessionContext.Provider value={{ data, updateData}}>
+        <SessionContext.Provider value={{ data, updateData, favourites }}>
             {props.children}
         </SessionContext.Provider>
     )
