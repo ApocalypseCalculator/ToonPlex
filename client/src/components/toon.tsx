@@ -87,6 +87,23 @@ export const Toon = () => {
                                                                             Continue Reading
                                                                         </Link> : <></>
                                                                 }
+                                                                {
+                                                                    session.favourites.ready && <>
+                                                                        {
+                                                                            session.favourites.favourites.find((e: any) => e.slug == toonslug) ?
+                                                                                <button className='anime-btn btn btn-warning ml-3' onClick={() => {
+                                                                                    session.updateFavourites(toonslug!, true);
+                                                                                }}>
+                                                                                    Unfavourite (added on {new Date(session.favourites.favourites.find((e: any) => e.slug == toonslug).date).toLocaleDateString()})
+                                                                                </button> :
+                                                                                <button className='anime-btn btn btn-warning ml-3' onClick={() => {
+                                                                                    session.updateFavourites(toonslug!, false);
+                                                                                }}>
+                                                                                    Add to Favourites
+                                                                                </button>
+                                                                        }
+                                                                    </>
+                                                                }
                                                             </div> : <></>
                                                     }
                                                 </div>
