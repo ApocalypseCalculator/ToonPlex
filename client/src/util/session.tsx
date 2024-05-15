@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { default as axios } from 'axios';
 
+export interface FavouritesData {
+    favourites: any[],
+    ready: boolean
+}
 export interface SessionData {
     username: string,
     token: string,
@@ -8,8 +12,9 @@ export interface SessionData {
 }
 export interface Session {
     data: SessionData,
-    favourites: any[],
-    updateData: (data: { username: string, token: string }) => void
+    favourites: FavouritesData,
+    updateData: (data: { username: string, token: string }) => void,
+    updateFavourites: (slug: string, todelete: boolean) => void
 }
 
 export const SessionContext = React.createContext<Session>({} as any);
@@ -48,7 +53,7 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         }
     }, []);
 
-    const [favourites, setFavourites] = React.useState([] as any[]);
+    const [favourites, setFavourites] = React.useState({favourites: [], ready: false} as FavouritesData);
     React.useEffect(() => {
         // fetch favourites
         if (data.ready && data.token !== "") {
@@ -57,13 +62,42 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
                     Authorization: data.token
                 }
             }).then((response) => {
-                setFavourites(response.data.favourites);
+                setFavourites({favourites: response.data.favourites, ready: true});
             });
+        }
+        else if(data.ready) {
+            setFavourites({favourites: [], ready: true});
         }
     }, [data]);
 
+    function updateFavourites(slug: string, todelete: boolean) {
+        if (data.token === "") {
+            return;
+        }
+        if (todelete) {
+            axios.post(`/api/user/favourite/record/${slug}`, {
+                delete: true
+            }, {
+                headers: {
+                    Authorization: data.token
+                }
+            }).then((response) => {
+                setFavourites({favourites: favourites.favourites.filter((fav) => fav.slug !== slug), ready: true});
+            });
+        }
+        else {
+            axios.post(`/api/user/favourite/record/${slug}`, {}, {
+                headers: {
+                    Authorization: data.token
+                }
+            }).then((response) => {
+                setFavourites({favourites: [...favourites.favourites, {slug: slug, date: Date.now()}], ready: true});
+            });
+        }
+    }
+
     return (
-        <SessionContext.Provider value={{ data, updateData, favourites }}>
+        <SessionContext.Provider value={{ data, updateData, favourites, updateFavourites }}>
             {props.children}
         </SessionContext.Provider>
     )
