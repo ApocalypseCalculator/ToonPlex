@@ -23,6 +23,7 @@ authors, artists, genres, tags, etc.
 */
 
 module.exports.execute = function (req, res) {
+    let publishedonly = (!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin));
     let amount = parseInt(req.query.amount) || DEFAULT_PAGE_SIZE;
     let page = (parseInt(req.query.page) || 1);
     let offset = (page - 1) * amount;
@@ -31,7 +32,8 @@ module.exports.execute = function (req, res) {
         SELECT searchres.id, title, slug, published, searchres."status", "Image".transport, full_count FROM 
         (
             SELECT *, ts_rank(search, websearch_to_tsquery('english', ${req.query.query})) rank, count(*) OVER() AS full_count 
-            FROM "Toon" WHERE search @@ websearch_to_tsquery('english', ${req.query.query}) 
+            FROM "Toon" 
+            WHERE search @@ websearch_to_tsquery('english', ${req.query.query}) AND ("Toon".published = ${publishedonly} OR "Toon".published = true) 
             ORDER BY rank DESC 
             OFFSET ${offset} LIMIT ${amount}
         ) AS searchres 

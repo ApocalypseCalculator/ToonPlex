@@ -10,6 +10,7 @@ module.exports.verify = function (req, res) {
 const DEFAULT_PAGE_SIZE = 6;
 
 module.exports.execute = function (req, res) {
+    let publishedonly = (!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin));
     let amount = parseInt(req.query.amount) || DEFAULT_PAGE_SIZE;
     let page = (parseInt(req.query.page) || 1);
     let offset = (page - 1) * amount;
@@ -23,6 +24,7 @@ module.exports.execute = function (req, res) {
     ORDER BY "Chapter".toonid ASC, "Chapter".order DESC) AS weird_pg_moment 
     INNER JOIN "Toon" ON toonid = "Toon".id 
     LEFT JOIN "Image" ON "Toon".coverid = "Image".id 
+    WHERE "Toon".published = ${publishedonly} OR "Toon".published = true 
     ORDER BY "date" DESC 
     OFFSET ${offset} LIMIT ${amount == 0 ? 'NULL' : amount};`.then((history) => {
         history.map((toon) => {

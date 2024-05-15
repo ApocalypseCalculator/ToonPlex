@@ -11,7 +11,10 @@ module.exports.verify = function (req, res) {
 module.exports.execute = function (req, res) {
     prisma.favourite.findMany({
         where: {
-            userid: req.auth.id
+            userid: req.auth.id,
+            toon: {
+                ...((!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin)) && { published: true })
+            }
         },
         select: {
             toon: {

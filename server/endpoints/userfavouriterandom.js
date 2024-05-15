@@ -13,12 +13,14 @@ const DEFAULT_PAGE_SIZE = 4;
 // raw query to take advantage of native Postgres RANDOM() 
 module.exports.execute = function (req, res) {
     let amount = parseInt(req.query.amount) || DEFAULT_PAGE_SIZE;
+    let publishedonly = (!req.auth || (!req.auth.permissions.read && !req.auth.permissions.admin));
 
     prisma.$queryRaw`SELECT "date", toonid, "Toon".slug, "Toon".title, "Toon"."status", "Image".transport FROM 
         (SELECT "date", toonid FROM "Favourite" WHERE userid = ${req.auth.id} ORDER BY RANDOM() LIMIT ${amount}) 
         AS random_favourites 
         INNER JOIN "Toon" ON "Toon".id = toonid 
-        LEFT JOIN "Image" ON "Image".id = "Toon".coverid;`
+        LEFT JOIN "Image" ON "Image".id = "Toon".coverid 
+        WHERE "Toon".published = ${publishedonly} OR "Toon".published = true;`
     .then((favourites) => {
         res.status(200).json({ status: 200, favourites: favourites });
     }).catch(err => {
