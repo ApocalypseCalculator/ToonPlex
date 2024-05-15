@@ -9,6 +9,7 @@ export const Home = () => {
     const session = React.useContext(SessionContext);
     const [newtoons, setNewtoons] = React.useState([]);
     const [readhistory, setReadhistory] = React.useState([]);
+    const [randfavourites, setRandfavourites] = React.useState([]);
 
     React.useEffect(() => {
         if (session.data.ready && session.data.token !== "") {
@@ -22,10 +23,16 @@ export const Home = () => {
                     headers: {
                         Authorization: session.data.token
                     }
+                }),
+                axios.get(`/api/user/favourite/random?amount=${AMOUNT_PER_SECTION}`, {
+                    headers: {
+                        Authorization: session.data.token
+                    }
                 })
-            ]).then(([toonlist, history]) => {
+            ]).then(([toonlist, history, favourites]) => {
                 setNewtoons(toonlist.data.toons);
                 setReadhistory(history.data.history);
+                setRandfavourites(favourites.data.favourites);
             });
         }
     }, [session.data.ready]);
@@ -117,8 +124,7 @@ export const Home = () => {
                                         }
                                     </div>
                                 </div>
-                                { /*
-                                I will implement favouriting soon fr fr
+
                                 <div className='col-sm px-lg-5'>
                                     <section>
                                         <div className='toonlist-heading'>
@@ -127,19 +133,19 @@ export const Home = () => {
                                     </section>
                                     <div className='row'>
                                         {
-                                            newtoons.map((toon: any, i) => (
+                                            randfavourites.map((toon: any, i) => (
                                                 <div className='col-6' key={i}>
                                                     <div className='toonlist-item webtoon-gridview'>
                                                         <Link to={`/toon/${toon.slug}`} className='webtoon-gridimg'>
-                                                            <img className='gridimg-preview' src={toon.cover.transport ?
-                                                                `/api/image/get/${toon.cover.transport}` :
+                                                            <img className='gridimg-preview' src={toon.transport ?
+                                                                `/api/image/get/${toon.transport}` :
                                                                 // we piggyback off of wikipedia's placeholder image
                                                                 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'
                                                             }></img>
                                                         </Link>
                                                         <div className='d-flex justify-content-between'>
                                                             <p className='text'>
-                                                                {toon.status}
+                                                                Added on {new Date(toon.date).toLocaleDateString()}
                                                             </p>
                                                         </div>
                                                         <h5 className='dir-toontitle'>
@@ -152,7 +158,7 @@ export const Home = () => {
                                             ))
                                         }
                                     </div>
-                                    </div> */}
+                                </div>
                             </div>
                         </div>
                     </>
