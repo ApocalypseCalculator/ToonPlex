@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const fs = require('fs');
 const fileUpload = require('express-fileupload');
@@ -5,7 +7,6 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-require('dotenv').config();
 
 /*
 required .env configurations: 
