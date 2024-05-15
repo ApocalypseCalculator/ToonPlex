@@ -19,13 +19,16 @@ module.exports.execute = function (req, res) {
         select: {
             toon: {
                 select: {
-                    slug: true,
-                    id: true
+                    slug: true
                 }
             },
             date: true
         }
     }).then((favourites) => {
+        favourites.forEach((favourite) => {
+            favourite.slug = favourite.toon.slug;
+            delete favourite.toon;
+        });
         res.status(200).json({ status: 200, favourites: favourites });
     });
 }
