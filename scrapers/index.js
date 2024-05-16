@@ -1,8 +1,15 @@
+require('dotenv').config();
+
 const scrapers = require('./suite');
 const axios = require('axios').default;
 const { fork } = require('child_process');
 const fs = require('fs');
-require('dotenv').config();
+
+const DATAPATH = `./data.json`;
+if (!fs.existsSync(DATAPATH)) {
+    fs.writeFileSync(DATAPATH, '{}');
+}
+let DATAFILE = JSON.parse(fs.readFileSync(DATAPATH));
 
 /*
 required .env configurations: 
@@ -10,7 +17,7 @@ HOST: the host of the server (include scheme and origin, e.g. http://127.0.0.1:8
 DOWNLOADPATH: the path to download images to (e.g. ./tmp)
 */
 
-if(!process.env.HOST || !process.env.DOWNLOADPATH) {
+if (!process.env.HOST || !process.env.DOWNLOADPATH) {
     console.error('\x1b[31mMissing required environment variables\x1b[39m');
     process.exit(1);
 }
@@ -21,7 +28,7 @@ const readline = require('node:readline').createInterface({
 });
 let token = '';
 
-if(fs.existsSync(process.env.DOWNLOADPATH)) {
+if (fs.existsSync(process.env.DOWNLOADPATH)) {
     console.log(`\x1b[33mWarning: it is recommended to clear the download directory before each run to prevent excessive disk usage\x1b[39m`);
 }
 else {
@@ -32,27 +39,53 @@ else {
 login(mainScraper);
 
 function login(callback) {
-    readline.question('Enter username >> ', username => {
-        readline.question('Enter password >> ', password => {
-            axios.post(`${process.env.HOST}/api/user/login`, {
-                username: username,
-                password: password
-            }).then(res => {
-                if (res.data.token) {
-                    token = res.data.token;
-                    console.log('Logged in successfully');
-                    callback();
-                }
-                else {
-                    console.error('Login failed');
-                    process.exit(1);
-                }
-            }).catch(err => {
-                console.error(err);
-                process.exit(1);
+    if (DATAFILE.token) {
+        axios.get(`${process.env.HOST}/api/user/favourite/random?amount=0`, {
+            headers: {
+                Authorization: DATAFILE.token
+            }
+        }).then(() => {
+            token = DATAFILE.token;
+            console.log('\x1b[32mLogged in successfully\x1b[39m');
+            callback();
+            return;
+        }).catch((err) => {
+            console.error('\x1b[31mToken invalid\x1b[39m');
+            delete DATAFILE.token;
+            fs.writeFileSync(DATAPATH, JSON.stringify(DATAFILE));
+            if(err.response.status == 403) {
+                login(callback);
+            }
+        });
+    }
+    else {
+        readline.question('Enter username >> ', username => {
+            readline.question('Enter password >> ', password => {
+                axios.post(`${process.env.HOST}/api/user/login`, {
+                    username: username,
+                    password: password
+                }).then(res => {
+                    if (res.data.token) {
+                        token = res.data.token;
+                        console.log('\x1b[32mLogged in successfully\x1b[39m');
+                        DATAFILE.token = token;
+                        fs.writeFileSync(DATAPATH, JSON.stringify(DATAFILE));
+                        callback();
+                        return;
+                    }
+                    else {
+                        console.error('\x1b[31mUnexpected error\x1b[39m');
+                        process.exit(1);
+                    }
+                }).catch(err => {
+                    console.error('\x1b[31mLogin failed\x1b[39m');
+                    if(err.response.status == 401) {
+                        login(callback);
+                    }
+                });
             });
         });
-    });
+    }
 }
 
 function mainScraper() {
@@ -79,7 +112,7 @@ function mainScraper() {
             }
             let reqqueue = [];
             let scrapedone = false;
-            
+
             // request queue at end
 
             child.on('message', msg => {
