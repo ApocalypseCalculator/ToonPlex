@@ -10,6 +10,7 @@ if (!fs.existsSync(DATAPATH)) {
     fs.writeFileSync(DATAPATH, '{}');
 }
 let DATAFILE = JSON.parse(fs.readFileSync(DATAPATH));
+const VERBOSE = (process.argv.includes('--verbose') || process.argv.includes('-v'));
 
 /*
 required .env configurations: 
@@ -53,7 +54,7 @@ function login(callback) {
             console.error('\x1b[31mToken invalid\x1b[39m');
             delete DATAFILE.token;
             fs.writeFileSync(DATAPATH, JSON.stringify(DATAFILE));
-            if(err.response.status == 403) {
+            if (err.response.status == 403) {
                 login(callback);
             }
         });
@@ -79,7 +80,7 @@ function login(callback) {
                     }
                 }).catch(err => {
                     console.error('\x1b[31mLogin failed\x1b[39m');
-                    if(err.response.status == 401) {
+                    if (err.response.status == 401) {
                         login(callback);
                     }
                 });
@@ -146,7 +147,9 @@ function mainScraper() {
                         },
                         callback: (res, toondata) => {
                             if (res.data.status == 201) {
-                                console.log(`Chapter ${msg.data.order} created with ID ${res.data.chapter}`);
+                                if (VERBOSE) {
+                                    console.log(`Chapter ${msg.data.order} created with ID ${res.data.chapter}`);
+                                }
                                 reqqueue.push({
                                     condition: (toondata) => { return true },
                                     method: 'get',
@@ -176,7 +179,14 @@ function mainScraper() {
                         },
                         callback: (res, toondata) => {
                             if (res.status == 200) {
-                                console.log(`Image uploaded for chapter ${msg.data.chapter} page ${msg.data.page}`);
+                                if (VERBOSE) {
+                                    console.log(`Image uploaded for chapter ${msg.data.chapter} page ${msg.data.page}`);
+                                }
+                                else {
+                                    if (toondata.chapters.get(msg.data.chapter).length == msg.data.page + 1) {
+                                        console.log(`Finished page uploads for chapter ${msg.data.chapter}`);
+                                    }
+                                }
                             }
                         }
                     })
@@ -214,14 +224,21 @@ function mainScraper() {
             // home made request queue
             // each request contains a condition
             // iterate through requests and send them if the condition is met
+            let lastreport = Date.now();
             while (reqqueue.length > 0 || !scrapedone) {
-                console.log(`${reqqueue.length} requests in queue`);
+                if (Date.now() - lastreport > (VERBOSE ? 5000 : 30000)) {
+                    // report every 5 or 30 seconds depending on verbosity
+                    console.log(`${reqqueue.length} requests in queue`);
+                    lastreport = Date.now();
+                }
                 // pop the first request out
                 let req = reqqueue.shift();
                 if (req) {
                     if (req.condition(toondata)) {
                         let requrl = (typeof req.url === "function" ? req.url(toondata) : req.url);
-                        console.log(`Sending request ${req.method} to ${requrl}`);
+                        if (VERBOSE) {
+                            console.log(`Sending request ${req.method} to ${requrl}`);
+                        }
                         let res = await axios({
                             method: req.method,
                             url: requrl,
@@ -241,7 +258,9 @@ function mainScraper() {
                     else {
                         // if the condition isn't satisfied, push it back to the queue
                         // we skip the queue timeout here
-                        console.log(`Request condition not met, requeueing`);
+                        if (VERBOSE) {
+                            console.log(`Request condition not met, requeueing`);
+                        }
                         reqqueue.push(req);
                     }
                 }
@@ -251,7 +270,7 @@ function mainScraper() {
                 }
             }
 
-            console.log('All requests completed, exiting');
+            console.log('\x1b[32mAll requests completed, exiting\x1b[39m');
             process.exit(0);
         } else {
             console.log(`No scraper found for ${url.host}`);
